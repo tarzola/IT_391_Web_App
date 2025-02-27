@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Welcome to Your Dashboard!</h2>
+    
+    <!-- Add user-specific content here, like inventory, user data, etc. -->
+    <p>This is your private dashboard page. Only accessible after logging in.</p>
+
+    <button onclick="logout()">Logout</button>
+
+    <script>
+        // Check if the user has a valid JWT token in localStorage
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            // If no token, redirect to login page
+            window.location.href = '/login.html';  // Redirect to login page if not logged in
+        } else {
+            // You can optionally verify the token with the backend here
+            console.log('User is logged in, token:', token);
+
+            // Add more logic here to fetch and display user-specific data (e.g., inventory) using the token.
+        }
+
+        // Function to log out by clearing the JWT token from localStorage
+        function logout() {
+            localStorage.removeItem('token');  // Remove token from localStorage
+            window.location.href = '/login.html';  // Redirect to login page after logging out
+        }
+    </script>
+</body>
+</html>
