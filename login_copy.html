@@ -1,64 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login or Register</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h2>Login or Register</h2>
-    
-    <!-- Register Form -->
-    <div id="register-form" style="display: none;">
-        <h3>Register</h3>
-        <form id="register">
-            <label>Email:</label>
-            <input type="email" id="register-email" required><br><br>
-            
-            <label>Password:</label>
-            <input type="password" id="register-password" required><br><br>
-            
-            <button type="submit">Register</button>
-        </form>
-    </div>
+    <div class="login-container">
+        <h2>Login or Register</h2>
 
-    <!-- Login Form -->
-    <div id="login-form">
-        <h3>Login</h3>
-        <form id="login">
-            <label>Email:</label>
-            <input type="email" id="login-email" required><br><br>
-            
-            <label>Password:</label>
-            <input type="password" id="login-password" required><br><br>
-            
-            <button type="submit">Login</button>
-        </form>
-    </div>
+        <!-- Register Form -->
+        <div id="register-form" class="form-container" style="display: none;">
+            <h3>Register</h3>
+            <form id="register">
+                <label for="register-email">Email:</label>
+                <input type="email" id="register-email" required>
 
-    <p>
-        <button id="toggleForm">Don't have an account? Register</button>
-    </p>
+                <label for="register-password">Password:</label>
+                <input type="password" id="register-password" required>
+
+                <button type="submit">Register</button>
+            </form>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="form-container">
+            <h3>Login</h3>
+            <form id="login">
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" required>
+
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" required>
+
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        <p>
+            <button id="toggleForm">Don't have an account? Register</button>
+        </p>
+    </div>
 
     <script>
         // Toggle between login and register forms
-        document.getElementById('toggleForm').addEventListener('click', function() {
+        document.getElementById('toggleForm').addEventListener('click', function () {
             const registerForm = document.getElementById('register-form');
             const loginForm = document.getElementById('login-form');
 
             if (loginForm.style.display === 'none') {
                 loginForm.style.display = 'block';
                 registerForm.style.display = 'none';
-                document.getElementById('toggleForm').textContent = "Don't have an account? Register";
+                this.textContent = "Don't have an account? Register";
             } else {
                 loginForm.style.display = 'none';
                 registerForm.style.display = 'block';
-                document.getElementById('toggleForm').textContent = "Already have an account? Login";
+                this.textContent = "Already have an account? Login";
             }
         });
 
         // Handle Register form submission
-        document.getElementById('register').addEventListener('submit', async function(event) {
+        document.getElementById('register').addEventListener('submit', async function (event) {
             event.preventDefault();
 
             const email = document.getElementById('register-email').value;
@@ -79,7 +84,7 @@
         });
 
         // Handle Login form submission
-        document.getElementById('login').addEventListener('submit', async function(event) {
+        document.getElementById('login').addEventListener('submit', async function (event) {
             event.preventDefault();
 
             const email = document.getElementById('login-email').value;
@@ -105,4 +110,5 @@
         });
     </script>
 </body>
+
 </html>
