@@ -3,11 +3,15 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Client } = require('pg');
 const path = require('path');  // Required to serve static files
+const cors = require('cors');   // Add CORS to handle cross-origin requests
 const app = express();
 const port = 3000;
 
 // Middleware to parse JSON data in POST and PUT requests
 app.use(express.json());
+
+// Enable CORS for all origins (or restrict to a specific origin)
+app.use(cors());
 
 // Serve static files (like HTML, CSS, JS) from the public folder
 app.use(express.static(path.join(__dirname, 'public')));  // Make public folder accessible
@@ -147,8 +151,8 @@ app.delete('/inventory/:id', (req, res) => {
 });
 
 // Start the Express server
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running at http://0.0.0.0:${port}`);
 });
 
 // Handle server shutdown gracefully by closing the database connection
@@ -164,4 +168,5 @@ process.on('SIGINT', () => {
       process.exit(1);
     });
 });
+
 
