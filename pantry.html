@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Pantry</title>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body>
+    <header>
+        <h1>Your Pantry</h1>
+        <nav>
+            <ul>
+                <li><a href="homepage.html">Home</a></li>
+                <li><a href="add-item.html">Add Items</a></li>
+                <li><a href="recipes.html">Recipes</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section>
+        <h2>Pantry Items</h2>
+        <div id="pantry-items">
+            <!-- Display pantry items here -->
+        </div>
+        <h2>Fridge Items</h2>
+        <div id="fridge-items">
+            <!-- Display fridge items here -->
+        </div>
+    </section>
+
+    <script>
+        async function loadInventory() {
+            const response = await fetch('http://localhost:3000/inventory');
+            const inventory = await response.json();
+            
+            const pantryItemsDiv = document.getElementById('pantry-items');
+            const fridgeItemsDiv = document.getElementById('fridge-items');
+            
+            inventory.forEach(item => {
+                const div = document.createElement('div');
+                div.textContent = `${item.name} - ${item.quantity} (Expires: ${item.expiration_date})`;
+                
+                if (item.type === 'pantry') {
+                    pantryItemsDiv.appendChild(div);
+                } else if (item.type === 'fridge') {
+                    fridgeItemsDiv.appendChild(div);
+                }
+            });
+        }
+
+        loadInventory();
+    </script>
+</body>
+</html>

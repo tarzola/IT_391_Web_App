@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Suggestions</title>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body>
+    <header>
+        <h1>Recipe Suggestions</h1>
+        <nav>
+            <ul>
+                <li><a href="homepage.html">Home</a></li>
+                <li><a href="pantry.html">Pantry</a></li>
+                <li><a href="add-item.html">Add Items</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section>
+        <h2>Suggested Recipes</h2>
+        <div id="recipe-list">
+            <!-- List recipes here -->
+        </div>
+    </section>
+
+    <script>
+        async function loadRecipes() {
+            const response = await fetch('http://localhost:3000/inventory');
+            const inventory = await response.json();
+
+            // Prepare a list of ingredients from the inventory
+            const ingredients = inventory.map(item => item.name).join(',');
+
+            // Make a request to a recipe API (e.g., Spoonacular or Edamam)
+            const recipeResponse = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&apiKey=YOUR_API_KEY`);
+            const recipes = await recipeResponse.json();
+
+            const recipeListDiv = document.getElementById('recipe-list');
+            recipes.forEach(recipe => {
+                const div = document.createElement('div');
+                div.innerHTML = `<h3>${recipe.title}</h3><img src="${recipe.image}" alt="${recipe.title}"><p>${recipe.instructions}</p>`;
+                recipeListDiv.appendChild(div);
+            });
+        }
+
+        loadRecipes();
+    </script>
+</body>
+</html>
