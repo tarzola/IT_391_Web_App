@@ -23,7 +23,7 @@
 }
 
 #recipe-list h3 {
-    color: #33ad29 !important;  /* Force green color */
+    color: #33ad29; /* Green title */
     margin-bottom: 10px;
 }
 
