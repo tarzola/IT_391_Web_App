@@ -21,12 +21,6 @@
     transform: scale(1.05);  /* Slight zoom on hover */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
-#recipe-list h2 {
-    color: #33ad29;  /* Green color for Suggested Recipes */
-    text-align: center; /* Center the heading */
-    margin-top: 20px;  /* Add spacing */
-    font-size: 24px;   /* Larger text for emphasis */
-}
 
 
 #recipe-list h3 {
