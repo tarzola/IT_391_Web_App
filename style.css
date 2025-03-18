@@ -98,5 +98,77 @@ button:active {
     button {
         font-size: 14px;
     }
+   
+    
+    /* ==== Homepage Styles ==== */
+header {
+    text-align: center;
+    background: #007bff;
+    color: white;
+    padding: 15px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background: #0056b3;
+    padding: 10px;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a, .logout-btn {
+    text-decoration: none;
+    color: white;
+    padding: 8px 15px;
+    background: #003d80;
+    border-radius: 5px;
+}
+
+nav ul li a:hover, .logout-btn:hover {
+    background: #002866;
+}
+
+.summary {
+    margin: 20px auto;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 50%;
+}
+
+.quick-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
+
+.logout-btn {
+    background: red;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+}
+
 }
 
