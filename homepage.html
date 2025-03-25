@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Inventory Manager</title>
-    <link rel="stylesheet" href="CSS/style.css"> <!-- link css -->
+    <link rel="stylesheet" href="homepage-style.css"> <!-- link css -->
 </head>
 <body>
     <header>
@@ -36,30 +36,32 @@
 
     <script>
         async function loadInventory() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                window.location = 'login_copy.html'; // Redirect to login if not logged in
-                return;
-            }
+    const token = localStorage.getItem('token');
 
-            try {
-                const response = await fetch('http://localhost:3000/inventory',{
-                    headers: { 'Authirization': 'Bearer ${token}'}
-                })
-                const inventory = await response.json();
+    // TEMP: Disable redirect so we can test the page design
+    // if (!token) {
+    //     window.location = 'login_copy.html'; // Redirect to login if not logged in
+    //     return;
+    // }
 
-                let pantryCount = 0, fridgeCount = 0;
-                inventory.forEach(item => {
-                    if (item.type === 'pantry') pantryCount++;
-                    else if (item.type === 'fridge') fridgeCount++;
-                });
+    try {
+        const response = await fetch('http://localhost:3000/inventory',{
+            headers: { 'Authorization': `Bearer ${token}` } // Also fixed spelling & template literal
+        })
+        const inventory = await response.json();
 
-                document.getElementById('pantry-count').textContent = pantryCount;
-                document.getElementById('fridge-count').textContent = fridgeCount;
-            } catch (error) {
-                console.error('Error fetching inventory:', error);
-            }
-        }
+        let pantryCount = 0, fridgeCount = 0;
+        inventory.forEach(item => {
+            if (item.type === 'pantry') pantryCount++;
+            else if (item.type === 'fridge') fridgeCount++;
+        });
+
+        document.getElementById('pantry-count').textContent = pantryCount;
+        document.getElementById('fridge-count').textContent = fridgeCount;
+    } catch (error) {
+        console.error('Error fetching inventory:', error);
+    }
+}
 
         function logout() {
             localStorage.removeItem('token');
