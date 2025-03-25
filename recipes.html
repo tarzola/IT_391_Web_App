@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Suggestions</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="recipe-style.css"> 
 </head>
 <body>
@@ -27,14 +26,14 @@
 
     <script>
         async function loadRecipes() {
-            const response = await fetch('http://localhost:3000/inventory');
+            const response = await fetch('http://10.111.20.126:3000/inventory');
             const inventory = await response.json();
 
             // Prepare a list of ingredients from the inventory
             const ingredients = inventory.map(item => item.name).join(',');
 
             // Make a request to a recipe API (e.g., Spoonacular or Edamam)
-            const recipeResponse = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&apiKey=YOUR_API_KEY`);
+            const recipeResponse = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&apiKey=2d4dd1f699594d38a5a14aaded4adc2c`);
             const recipes = await recipeResponse.json();
 
             const recipeListDiv = document.getElementById('recipe-list');
