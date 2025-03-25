@@ -1,0 +1,85 @@
+/* Move navigation to the top */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 97%;
+    background: #33AD29;
+    color: white;
+    text-align: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+/* Ensure the body doesn't hide behind the fixed nav */
+body {
+    padding-top: 80px;
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background: #2a8e24;
+}
+
+nav ul li a:hover {
+    background: #20731b;
+}
+
+/* Pantry and Fridge sections */
+.section-container {
+    width: 80%;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#pantry-items {
+    background: #e0f2e0;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+#fridge-items {
+    background: #d0e8ff;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+/* Logout button styling */
+#logout-btn {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#logout-btn:hover {
+    background: #cc0000;
+}
