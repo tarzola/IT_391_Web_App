@@ -1,113 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login or Register</title>
-    <link rel="stylesheet" href="CSS/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login or Register</title>
+  <link rel="stylesheet" href="login-style.css" />
 </head>
 <body>
+  <div class="container">
     <h2>Login or Register</h2>
-    
+
     <!-- Register Form -->
     <div id="register-form" style="display: none;">
-        <h3>Register</h3>
-        <form id="register">
-            <label>Email:</label>
-            <input type="email" id="register-email" required><br><br>
-            
-            <label>Password:</label>
-            <input type="password" id="register-password" required><br><br>
-            
-            <button type="submit">Register</button>
-        </form>
+      <h3>Register</h3>
+      <form id="register">
+        <label>Email:</label>
+        <input type="email" id="register-email" required />
+
+        <label>Password:</label>
+        <input type="password" id="register-password" required />
+
+        <button type="submit">Register</button>
+      </form>
     </div>
 
     <!-- Login Form -->
     <div id="login-form">
-        <h3>Login</h3>
-        <form id="login">
-            <label>Email:</label>
-            <input type="email" id="login-email" required><br><br>
-            
-            <label>Password:</label>
-            <input type="password" id="login-password" required><br><br>
-            
-            <button type="submit">Login</button>
-        </form>
+      <h3>Login</h3>
+      <form id="login">
+        <label>Email:</label>
+        <input type="email" id="login-email" required />
+
+        <label>Password:</label>
+        <input type="password" id="login-password" required />
+
+        <div class="remember">
+          <input type="checkbox" id="remember-me" />
+          <label for="remember-me">Remember Me</label>
+        </div>
+
+        <button type="submit">Login</button>
+      </form>
     </div>
 
     <p>
-        <button id="toggleForm">Don't have an account? Register</button>
+      <button id="toggleForm">Don't have an account? Register</button>
     </p>
+  </div>
 
-    <script>
-        // Toggle between login and register forms
-        document.getElementById('toggleForm').addEventListener('click', function() {
-            const registerForm = document.getElementById('register-form');
-            const loginForm = document.getElementById('login-form');
+  <script>
+    // Toggle between login and register
+    document.getElementById('toggleForm').addEventListener('click', function () {
+      const registerForm = document.getElementById('register-form');
+      const loginForm = document.getElementById('login-form');
 
-            if (loginForm.style.display === 'none') {
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
-                document.getElementById('toggleForm').textContent = "Don't have an account? Register";
-            } else {
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'block';
-                document.getElementById('toggleForm').textContent = "Already have an account? Login";
-            }
+      if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        this.textContent = "Don't have an account? Register";
+      } else {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        this.textContent = 'Already have an account? Login';
+      }
+    });
+
+    // Load remembered email
+    window.addEventListener('DOMContentLoaded', () => {
+      const rememberedEmail = localStorage.getItem('rememberedEmail');
+      if (rememberedEmail) {
+        document.getElementById('login-email').value = rememberedEmail;
+        document.getElementById('remember-me').checked = true;
+      }
+    });
+
+    // Encrypt password (SHA-256)
+    async function hashPassword(password) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password);
+      const hash = await crypto.subtle.digest('SHA-256', data);
+      return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Handle Register
+    document.getElementById('register').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const email = document.getElementById('register-email').value;
+      const password = await hashPassword(document.getElementById('register-password').value);
+
+      try {
+        const response = await fetch('http://localhost:3000/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        alert(data.message || 'User registered successfully');
+      } catch (error) {
+        alert('Error registering: ' + error.message);
+      }
+    });
+
+    // Handle Login
+    document.getElementById('login').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = await hashPassword(document.getElementById('login-password').value);
+
+      if (document.getElementById('remember-me').checked) {
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
         });
 
-        // Handle Register form submission
-        document.getElementById('register').addEventListener('submit', async function(event) {
-            event.preventDefault();
+        const data = await response.json();
 
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-
-            try {
-                const response = await fetch('http://localhost:3000/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-                alert(data.message || 'User registered successfully');
-            } catch (error) {
-                alert('Error registering: ' + error.message);
-            }
-        });
-
-        // Handle Login form submission
-        document.getElementById('login').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            try {
-                const response = await fetch('http://localhost:3000/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Save the JWT token to localStorage
-                    localStorage.setItem('token', data.token);
-
-                    // Redirect to the dashboard page (protected page)
-                    window.location.href = '/dashboard.html';  // Change this URL as needed
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            } catch (error) {
-                alert('Error logging in: ' + error.message);
-            }
-        });
-    </script>
+        if (response.ok) {
+          localStorage.setItem('token', data.token);
+          window.location.href = 'homepage.html'; // redirect after login
+        } else {
+          alert('Error: ' + data.message);
+        }
+      } catch (error) {
+        alert('Error logging in: ' + error.message);
+      }
+    });
+  </script>
 </body>
 </html>
