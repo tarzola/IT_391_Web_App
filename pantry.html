@@ -2,61 +2,71 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Pantry</title>
-    <link rel="stylesheet" href="pantry_style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Pantry</title>
+  <link rel="stylesheet" href="pantry_style.css" />
 </head>
 
 <body>
-    <header>
-        <h1>Your Pantry</h1>
-        <nav>
-            <ul>
-                <li><a href="homepage.html">Home</a></li>
-                <li><a href="add-item.html">Add Items</a></li>
-                <li><a href="recipes.html">Recipes</a></li>
-            </ul>
-        </nav>
-        <button id="logout-btn">Logout</button>
-    </header>
+  <header>
+    <h1>Your Pantry</h1>
+    <nav>
+      <ul>
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="add-item.html">Add Items</a></li>
+        <li><a href="recipes.html">Recipes</a></li>
+      </ul>
+    </nav>
+    <button id="logout-btn">Logout</button>
+  </header>
 
-    <section class="section-container">
-        <h2>Pantry Items</h2>
-        <div id="pantry-items">
-            <!-- Display pantry items here -->
-        </div>
-    </section>
+  <section class="section-container">
+    <h2>Pantry Items</h2>
+    <div id="pantry-items">
+      <!-- Display pantry items here -->
+    </div>
+  </section>
 
-    <section class="section-container">
-        <h2>Fridge Items</h2>
-        <div id="fridge-items">
-            <!-- Display fridge items here -->
-        </div>
-    </section>
+  <section class="section-container">
+    <h2>Fridge Items</h2>
+    <div id="fridge-items">
+      <!-- Display fridge items here -->
+    </div>
+  </section>
 
-    <script>
-        async function loadInventory() {
-            const response = await fetch('http://localhost:3000/inventory');
-            const inventory = await response.json();
+  <script>
+    async function loadInventory() {
+      try {
+        const response = await fetch('http://10.111.20.126:3000/inventory');
+        const inventory = await response.json();
 
-            const pantryItemsDiv = document.getElementById('pantry-items');
-            const fridgeItemsDiv = document.getElementById('fridge-items');
+        const pantryItemsDiv = document.getElementById('pantry-items');
+        const fridgeItemsDiv = document.getElementById('fridge-items');
 
-            inventory.forEach(item => {
-                const div = document.createElement('div');
-                div.textContent = `${item.name} - ${item.quantity} (Expires: ${item.expiration_date})`;
+        inventory.forEach(item => {
+          const div = document.createElement('div');
+          div.textContent = `${item.name} - ${item.quantity} (Expires: ${item.expiration_date})`;
 
-                if (item.type === 'pantry') {
-                    pantryItemsDiv.appendChild(div);
-                } else if (item.type === 'fridge') {
-                    fridgeItemsDiv.appendChild(div);
-                }
-            });
-        }
+          if (item.type === 'pantry') {
+            pantryItemsDiv.appendChild(div);
+          } else if (item.type === 'fridge') {
+            fridgeItemsDiv.appendChild(div);
+          }
+        });
+      } catch (err) {
+        console.error('Error fetching inventory:', err);
+      }
+    }
 
-        loadInventory();
-    </script>
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = 'login_copy2.html';
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', logout);
+    document.addEventListener('DOMContentLoaded', loadInventory);
+  </script>
 </body>
 
 </html>
