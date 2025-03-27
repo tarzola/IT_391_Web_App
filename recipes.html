@@ -1,70 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Suggestions</title>
-    <link rel="stylesheet" href="recipe-style.css"> 
-    <style>
-        /* Optional scrollable instructions area */
-        .instructions {
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe Suggestions</title>
+  <link rel="stylesheet" href="recipe-style.css" />
+  <style>
+    /* Optional scrollable instructions area */
+    .instructions {
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Recipe Suggestions</h1>
-        <nav>
-            <ul>
-                <li><a href="homepage.html">Home</a></li>
-                <li><a href="pantry.html">Pantry</a></li>
-                <li><a href="add-item.html">Add Items</a></li>
-            </ul>
-        </nav>
-    </header>
-    <section>
-        <h2>Suggested Recipes</h2>
-        <div id="recipe-list">
-            <!-- Recipes will be inserted here -->
-        </div>
-    </section>
+  <header>
+    <h1>Recipe Suggestions</h1>
+    <nav>
+      <ul>
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="pantry.html">Pantry</a></li>
+        <li><a href="add-item.html">Add Items</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <script>
-        async function loadRecipes() {
-            try {
-                const response = await fetch('http://10.111.20.126:3000/inventory');
-                const inventory = await response.json();
-                const ingredients = inventory.map(item => item.name).join(',');
-    
-                const recipeResponse = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=2d4dd1f699594d38a5a14aaded4adc2c`);
-                const recipes = await recipeResponse.json();
-    
-                const recipeListDiv = document.getElementById('recipe-list');
-    
-                for (const recipe of recipes) {
-                    const detailResponse = await fetch(`https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=2d4dd1f699594d38a5a14aaded4adc2c`);
-                    const detail = await detailResponse.json();
-    
-                    const div = document.createElement('div');
-                    div.innerHTML = `
-                        <a href="recipe-details.html?id=${recipe.id}" style="text-decoration: none; color: inherit;">
-                            <h3>${recipe.title}</h3>
-                            <img src="${recipe.image}" alt="${recipe.title}">
-                            <p>${detail.summary ? detail.summary.replace(/<[^>]+>/g, '').slice(0, 150) + '...' : 'No description available.'}</p>
-                        </a>
-                    `;
-                    recipeListDiv.appendChild(div);
-                }
-            } catch (error) {
-                console.error('Error loading recipes:', error);
-            }
+  <section>
+    <h2>Suggested Recipes</h2>
+    <div id="recipe-list">
+      <!-- Recipes will be inserted here -->
+    </div>
+  </section>
+
+  <script>
+    async function loadRecipes() {
+      try {
+        const response = await fetch('http://10.111.20.126:3000/inventory');
+        const inventory = await response.json();
+        const ingredients = inventory.map(item => item.name).join(',');
+
+        const recipeResponse = await fetch(
+          `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=2d4dd1f699594d38a5a14aaded4adc2c`
+        );
+        const recipes = await recipeResponse.json();
+
+        const recipeListDiv = document.getElementById('recipe-list');
+
+        for (const recipe of recipes) {
+          const detailResponse = await fetch(
+            `https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=2d4dd1f699594d38a5a14aaded4adc2c`
+          );
+          const detail = await detailResponse.json();
+
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <a href="recipe-details.html?id=${recipe.id}" style="text-decoration: none; color: inherit;">
+              <h3>${recipe.title}</h3>
+              <img src="${recipe.image}" alt="${recipe.title}">
+              <p>${detail.summary ? detail.summary.replace(/<[^>]+>/g, '').slice(0, 150) + '...' : 'No description available.'}</p>
+            </a>
+          `;
+          recipeListDiv.appendChild(div);
         }
-    
-        loadRecipes();
-    </script>
-    
+      } catch (error) {
+        console.error('Error loading recipes:', error);
+      }
+    }
+
+    loadRecipes();
+  </script>
 </body>
 </html>
