@@ -1,75 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Items to Inventory</title>
-    <link rel="stylesheet" href="add-item-style.css">  <!-- Correct link to your CSS file -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Items to Inventory</title>
+  <link rel="stylesheet" href="add-item-style.css" />
 </head>
 <body>
-    <header>
-        <h1>Add Items to Inventory</h1>
-        <nav>
-            <ul>
-                <li><a href="homepage.html">Home</a></li>
-                <li><a href="pantry.html">Pantry</a></li>
-                <li><a href="recipes.html">Recipes</a></li>
-            </ul>
-        </nav>
-    </header>
-    <section>
-        <h2>Manual Entry</h2>
-        <form id="add-item-form">
-            <label for="item-name">Item Name:</label>
-            <input type="text" id="item-name" required><br><br>
+  <header>
+    <h1>Add Items to Inventory</h1>
+    <nav>
+      <ul>
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="pantry.html">Pantry</a></li>
+        <li><a href="recipes.html">Recipes</a></li>
+      </ul>
+    </nav>
+  </header>
 
-            <label for="item-quantity">Quantity:</label>
-            <input type="number" id="item-quantity" required><br><br>
+  <section>
+    <h2>Manual Entry</h2>
+    <form id="add-item-form">
+      <label for="item-name">Item Name:</label>
+      <input type="text" id="item-name" required /><br /><br />
 
-            <label for="item-expiration">Expiration Date:</label>
-            <input type="date" id="item-expiration" required><br><br>
+      <label for="item-quantity">Quantity:</label>
+      <input type="number" id="item-quantity" required /><br /><br />
 
-            <label for="item-type">Type:</label>
-            <select id="item-type" required>
-                <option value="pantry">Pantry</option>
-                <option value="fridge">Fridge</option>
-            </select><br><br>
+      <label for="item-expiration">Expiration Date:</label>
+      <input type="date" id="item-expiration" required /><br /><br />
 
-            <label for="upc-code">UPC Code (Optional):</label>
-            <input type="text" id="upc-code" placeholder="Enter UPC code"><br><br>
+      <label for="item-type">Type:</label>
+      <select id="item-type" required>
+        <option value="pantry">Pantry</option>
+        <option value="fridge">Fridge</option>
+      </select><br /><br />
 
-            <button type="submit">Add Item</button>
-        </form>
-        
-        <h2>Barcode Scan</h2>
-        <!-- Implement barcode scanning functionality here -->
-    </section>
+      <label for="upc-code">UPC Code (Optional):</label>
+      <input type="text" id="upc-code" placeholder="Enter UPC code" /><br /><br />
 
-    <script>
-        // Handle form submission to add item to inventory
-        document.getElementById('add-item-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
+      <button type="submit">Add Item</button>
+    </form>
 
-            const name = document.getElementById('item-name').value;
-            const quantity = document.getElementById('item-quantity').value;
-            const expiration_date = document.getElementById('item-expiration').value;
-            const type = document.getElementById('item-type').value;
-            const upc = document.getElementById('upc-code').value; // Get UPC code from input
+    <h2>Barcode Scan</h2>
+    <!-- Implement barcode scanning functionality here -->
+  </section>
 
-            try {
-                const response = await fetch('http://localhost:3000/inventory', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, quantity, expiration_date, type, upc }) // Send UPC code along with other data
-                });
+  <script>
+    document.getElementById('add-item-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
 
-                const data = await response.json();
-                alert('Item added to inventory: ' + data.name);
-            } catch (error) {
-                alert('Error adding item: ' + error.message);
-            }
+      const name = document.getElementById('item-name').value;
+      const quantity = document.getElementById('item-quantity').value;
+      const expiration_date = document.getElementById('item-expiration').value;
+      const type = document.getElementById('item-type').value;
+      const upc = document.getElementById('upc-code').value;
+
+      try {
+        const response = await fetch('http://10.111.20.126:3000/inventory', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, quantity, expiration_date, type, upc })
         });
-    </script>
+
+        const data = await response.json();
+        alert('Item added to inventory: ' + data.name);
+      } catch (error) {
+        alert('Error adding item: ' + error.message);
+      }
+    });
+  </script>
 </body>
 </html>
 
