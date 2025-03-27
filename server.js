@@ -32,7 +32,7 @@ client.connect()
 
 // Define the root route that will serve the login page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));  // Serve login.html from the public folder
+  res.sendFile(path.join(__dirname, 'public', 'login_copy2.html'));  // Serve login.html from the public folder
 });
 
 // Register Route (POST - Create)
@@ -146,6 +146,21 @@ app.delete('/inventory/:id', (req, res) => {
       res.status(404).send('Item not found');
     } else {
       res.status(200).send('Item deleted successfully');
+    }
+  });
+});
+
+// GET Route: Get item suggestions based on the search query (Autocomplete)
+app.get('/inventory/suggestions', (req, res) => {
+  const searchQuery = req.query.q; // Query parameter for search string
+
+  // Query the database for items that match the search query
+  client.query('SELECT * FROM inventory WHERE name ILIKE $1 LIMIT 10', [`${searchQuery}%`], (err, result) => {
+    if (err) {
+      console.error('Error fetching inventory suggestions:', err);
+      res.status(500).send('Error fetching inventory suggestions');
+    } else {
+      res.json(result.rows);  // Send the matching inventory items as JSON
     }
   });
 });
