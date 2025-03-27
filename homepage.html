@@ -1,74 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Inventory Manager</title>
-    <link rel="stylesheet" href="homepage-style.css"> <!-- link css -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Inventory Manager</title>
+  <link rel="stylesheet" href="homepage-style.css">
 </head>
 <body>
-    <header>
-        <h1>Welcome to Your Pantry</h1>
-        <nav>
-            <ul>
-                <li><a href="pantry.html">Pantry</a></li>
-                <li><a href="add-item.html">Add Items</a></li>
-                <li><a href="recipes.html">Recipes</a></li>
-                <li><button onclick="logout()" class="logout-btn">logout</button></li>
-            </ul>
-        </nav>
-    </header>
-    <section>
-        <h2>Manage Your Inventory</h2>
-        <p>Welcome back! Use the navigation above to manage your pantry, add new items, or get recipe suggestions based on your inventory.</p>
+  <header>
+    <h1>Welcome to Your Pantry</h1>
+    <nav>
+      <ul>
+        <li><a href="pantry.html">Pantry</a></li>
+        <li><a href="add-item.html">Add Items</a></li>
+        <li><a href="recipes.html">Recipes</a></li>
+        <li><button onclick="logout()" class="logout-btn">Logout</button></li>
+      </ul>
+    </nav>
+  </header>
 
+  <section>
+    <h2>Manage Your Inventory</h2>
+    <p>Welcome back! Use the navigation above to manage your pantry, add new items, or get recipe suggestions based on your inventory.</p>
 
-        <div class="summary">
-            <p><strong>Pantry Items:</strong> <span id="pantry-count">0</span></p>
-            <p><strong>Fridge Items:</strong> <span id="fridge-count">0</span></p>
-        </div>
+    <div class="summary">
+      <p><strong>Pantry Items:</strong> <span id="pantry-count">0</span></p>
+      <p><strong>Fridge Items:</strong> <span id="fridge-count">0</span></p>
+    </div>
 
-        <div class="quick-actions">
-        <a href="add-item.html" class="btn">Scan an Item</a>
-        <a href="recipes.html" class="btn">Get Recipes</a>
-        </div>
-    </section>
+    <div class="quick-actions">
+      <a href="add-item.html" class="btn">Scan an Item</a>
+      <a href="recipes.html" class="btn">Get Recipes</a>
+    </div>
+  </section>
 
-    <script>
-        async function loadInventory() {
-    const token = localStorage.getItem('token');
+  <script>
+    async function loadInventory() {
+      const token = localStorage.getItem('token');
 
-    // TEMP: Disable redirect so we can test the page design
-    // if (!token) {
-    //     window.location = 'login_copy.html'; // Redirect to login if not logged in
-    //     return;
-    // }
+      try {
+        const response = await fetch('http://10.111.20.126:3000/inventory', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
-    try {
-        const response = await fetch('http://localhost:3000/inventory',{
-            headers: { 'Authorization': `Bearer ${token}` } // Also fixed spelling & template literal
-        })
         const inventory = await response.json();
 
         let pantryCount = 0, fridgeCount = 0;
         inventory.forEach(item => {
-            if (item.type === 'pantry') pantryCount++;
-            else if (item.type === 'fridge') fridgeCount++;
+          if (item.type === 'pantry') pantryCount++;
+          else if (item.type === 'fridge') fridgeCount++;
         });
 
         document.getElementById('pantry-count').textContent = pantryCount;
         document.getElementById('fridge-count').textContent = fridgeCount;
-    } catch (error) {
+      } catch (error) {
         console.error('Error fetching inventory:', error);
+      }
     }
-}
 
-        function logout() {
-            localStorage.removeItem('token');
-            window.location.href = 'login_copy.html';
-        }
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = 'login_copy2.html';
+    }
 
-        document.addEventListener('DOMContentLoaded', loadInventory);
-    </script>
+    document.addEventListener('DOMContentLoaded', loadInventory);
+  </script>
 </body>
 </html>
+
