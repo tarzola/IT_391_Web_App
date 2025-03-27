@@ -1,0 +1,139 @@
+/* General Styles for the Form Page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #33AD29; /* Green background */
+    padding: 20px;
+    text-align: center;
+    color: white;
+}
+
+h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+section {
+    padding: 20px;
+    background-color: white;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 22px;
+    color: #33AD29;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form label {
+    font-size: 16px;
+    color: #333;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"],
+form select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+form button {
+    padding: 12px;
+    background-color: #33AD29;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #268f1d; /* Darker green on hover */
+}
+
+form button:active {
+    background-color: #1e6d15; /* Even darker green when button is clicked */
+}
+
+form .barcode-scan {
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+    section {
+        width: 90%; /* Reduce the form container size on smaller screens */
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 20px; /* Make the header smaller for mobile screens */
+    }
+
+    form label,
+    form input[type="text"],
+    form input[type="number"],
+    form input[type="date"],
+    form select {
+        font-size: 14px; /* Adjust input sizes for better mobile compatibility */
+    }
+
+    form button {
+        font-size: 14px; /* Adjust button size for mobile */
+        padding: 10px;
+    }
+
+    nav ul li {
+        display: block;
+        margin-bottom: 10px; /* Stack navigation items on top of each other */
+    }
+
+    nav ul li a {
+        font-size: 14px;
+    }
+}
+

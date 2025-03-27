@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Items to Inventory</title>
-    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="add-item-style.css">  <!-- Correct link to your CSS file -->
 </head>
 <body>
     <header>
@@ -35,6 +35,9 @@
                 <option value="fridge">Fridge</option>
             </select><br><br>
 
+            <label for="upc-code">UPC Code (Optional):</label>
+            <input type="text" id="upc-code" placeholder="Enter UPC code"><br><br>
+
             <button type="submit">Add Item</button>
         </form>
         
@@ -51,12 +54,13 @@
             const quantity = document.getElementById('item-quantity').value;
             const expiration_date = document.getElementById('item-expiration').value;
             const type = document.getElementById('item-type').value;
+            const upc = document.getElementById('upc-code').value; // Get UPC code from input
 
             try {
                 const response = await fetch('http://localhost:3000/inventory', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, quantity, expiration_date, type })
+                    body: JSON.stringify({ name, quantity, expiration_date, type, upc }) // Send UPC code along with other data
                 });
 
                 const data = await response.json();
