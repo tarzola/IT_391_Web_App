@@ -60,7 +60,11 @@
 
         inventory.forEach(item => {
           const div = document.createElement('div');
-          div.textContent = `${item.name} - ${item.quantity} (Expires: ${item.expiration_date})`;
+          div.classList.add('inventory-item');
+          div.innerHTML = `
+            <span>${item.name} - ${item.quantity} (Expires: ${item.expiration_date})</span>
+            <button onclick="useItem(${item.id}, '${item.name}', '${item.type}')">Use</button>
+          `;
 
           if (item.type === 'pantry') {
             pantryItemsDiv.appendChild(div);
@@ -70,6 +74,42 @@
         });
       } catch (err) {
         console.error('Error fetching inventory:', err);
+      }
+    }
+
+    // Function to handle the use item logic
+    async function useItem(itemId, itemName, itemType) {
+      const quantityUsed = prompt(`How much of ${itemName} did you use?`);
+      if (isNaN(quantityUsed) || quantityUsed <= 0) {
+        alert('Invalid quantity');
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please log in to update your inventory');
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://10.111.20.126:3000/inventory/${itemId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ quantity: quantityUsed }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          alert(`You used ${quantityUsed} of ${itemName}.`);
+          loadInventory(); // Refresh the inventory list
+        } else {
+          alert('Error updating item: ' + data.message);
+        }
+      } catch (error) {
+        alert('Error updating item: ' + error.message);
       }
     }
 
