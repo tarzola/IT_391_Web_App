@@ -54,13 +54,24 @@
       const quantity = document.getElementById('item-quantity').value;
       const expiration_date = document.getElementById('item-expiration').value;
       const type = document.getElementById('item-type').value;
-      const upc = document.getElementById('upc-code').value;
+      const upc = document.getElementById('upc-code').value; // UPC is included, but will not be used
+
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        alert('Please login to add an item to the inventory');
+        return;
+      }
 
       try {
         const response = await fetch('http://10.111.20.126:3000/inventory', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, quantity, expiration_date, type, upc })
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // Add the token here for user authentication
+          },
+          body: JSON.stringify({ name, quantity, expiration_date, type, upc }) // UPC is sent but not processed yet
         });
 
         const data = await response.json();
