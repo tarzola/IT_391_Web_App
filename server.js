@@ -7,16 +7,15 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-// Middleware
-app.use(cors({
-  origin: 'http://10.111.20.126:80', // Allow requests from the frontend on port 80
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
-}));
+// === CORS Configuration ===
+// Allow any origin for development/demo purposes
+app.use(cors()); // Open CORS to all origins — safe for internal demo
+// You can restrict this after demo like:
+// app.use(cors({ origin: 'http://10.111.20.126' }));
 
-app.use(express.json()); // Parse JSON bodies
+app.use(express.json()); // Body parser for JSON
 
-// PostgreSQL client setup
+// === PostgreSQL Setup ===
 const client = new Client({
   host: 'localhost',
   port: 5432,
@@ -29,13 +28,10 @@ client.connect()
   .then(() => console.log('✅ Connected to PostgreSQL'))
   .catch(err => console.error('❌ PostgreSQL connection error:', err.stack));
 
-// ===========================
-// === Middleware for JWT Authentication ===
-// ===========================
-
-// Middleware to verify JWT and extract user information
+// === JWT Authentication Middleware ===
 const authenticateJWT = (req, res, next) => {
-  const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
+  const authHeader = req.header('Authorization');
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
     return res.status(403).json({ message: 'Token required' });
@@ -45,22 +41,20 @@ const authenticateJWT = (req, res, next) => {
     if (err) {
       return res.status(403).json({ message: 'Invalid token' });
     }
-    req.user = user; // Attach user info to request
+    req.user = user;
     next();
   });
 };
 
-// =========================
-// === API ROUTES BELOW ===
-// =========================
+// === Routes ===
 
-// Register new user
+// Register
 app.post('/register', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const existingUser = await client.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (existingUser.rows.length > 0) {
+    const existing = await client.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
@@ -77,7 +71,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// Login existing user
+// Login
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -100,23 +94,22 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Get inventory for logged-in user
+// Get inventory
 app.get('/inventory', authenticateJWT, (req, res) => {
   client.query('SELECT * FROM inventory WHERE user_id = $1', [req.user.id], (err, result) => {
     if (err) {
       console.error('Error fetching inventory:', err);
       res.status(500).send('Error fetching inventory');
     } else {
-      res.json(result.rows); // Send inventory data specific to the user
+      res.json(result.rows);
     }
   });
 });
 
-// Add new inventory item for logged-in user
+// Add inventory item
 app.post('/inventory', authenticateJWT, (req, res) => {
   const { name, quantity, expiration_date, type } = req.body;
 
-  // Ensure the user ID is captured from the JWT
   client.query(
     'INSERT INTO inventory (name, quantity, expiration_date, type, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
     [name, quantity, expiration_date, type, req.user.id],
@@ -125,18 +118,17 @@ app.post('/inventory', authenticateJWT, (req, res) => {
         console.error('Error adding item:', err);
         res.status(500).send('Error adding item');
       } else {
-        res.status(201).json(result.rows[0]); // Successfully added the item
+        res.status(201).json(result.rows[0]);
       }
     }
   );
 });
 
-// PUT route: Update the quantity of an item after it is used
+// Use item (subtract quantity or delete)
 app.put('/inventory/:id/use', authenticateJWT, (req, res) => {
   const { id } = req.params;
-  const { quantity } = req.body; // Quantity to be used
+  const { quantity } = req.body;
 
-  // Check if the item exists
   client.query('SELECT * FROM inventory WHERE id = $1 AND user_id = $2', [id, req.user.id], (err, result) => {
     if (err) {
       console.error('Error fetching item:', err);
@@ -148,14 +140,8 @@ app.put('/inventory/:id/use', authenticateJWT, (req, res) => {
     }
 
     const currentQuantity = result.rows[0].quantity;
-
-    // Check if there’s enough quantity to reduce
-    if (currentQuantity < quantity) {
-      return res.status(400).send('Not enough quantity to use');
-    }
-
-    // Update the quantity (if it's greater than the used amount)
     const newQuantity = currentQuantity - quantity;
+
     if (newQuantity > 0) {
       client.query(
         'UPDATE inventory SET quantity = $1 WHERE id = $2 AND user_id = $3 RETURNING *',
@@ -165,11 +151,10 @@ app.put('/inventory/:id/use', authenticateJWT, (req, res) => {
             console.error('Error updating item:', err);
             return res.status(500).send('Error updating item');
           }
-          res.json(result.rows[0]); // Return updated item
+          res.json(result.rows[0]);
         }
       );
     } else {
-      // If the quantity reaches zero, remove the item
       client.query(
         'DELETE FROM inventory WHERE id = $1 AND user_id = $2 RETURNING *',
         [id, req.user.id],
@@ -185,7 +170,7 @@ app.put('/inventory/:id/use', authenticateJWT, (req, res) => {
   });
 });
 
-// DELETE route: Remove an item from inventory completely
+// Delete item
 app.delete('/inventory/:id', authenticateJWT, (req, res) => {
   const { id } = req.params;
 
@@ -205,7 +190,7 @@ app.delete('/inventory/:id', authenticateJWT, (req, res) => {
   );
 });
 
-// Autocomplete search for inventory items (user-specific)
+// Suggestions for search bar
 app.get('/inventory/suggestions', authenticateJWT, (req, res) => {
   const searchQuery = req.query.q;
 
@@ -223,7 +208,7 @@ app.get('/inventory/suggestions', authenticateJWT, (req, res) => {
   );
 });
 
-// Start server on port 3000
+// Start the server
 app.listen(port, '0.0.0.0', () => {
   console.log(`🚀 API server running at http://0.0.0.0:${port}`);
 });
@@ -241,3 +226,4 @@ process.on('SIGINT', () => {
       process.exit(1);
     });
 });
+
