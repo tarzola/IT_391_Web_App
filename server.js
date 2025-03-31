@@ -1,9 +1,4 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { Client } = require('pg');
-const cors = require('cors');
-
+c
 const app = express();
 const port = 3000;
 
