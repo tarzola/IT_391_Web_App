@@ -8,7 +8,12 @@ const app = express();
 const port = 3000;
 
 // Middleware
-app.use(cors()); // Enable CORS so frontend on port 80 can call backend
+app.use(cors({
+  origin: 'http://10.111.20.126:80', // Allow requests from the frontend on port 80
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
+}));
+
 app.use(express.json()); // Parse JSON bodies
 
 // PostgreSQL client setup
@@ -30,7 +35,7 @@ client.connect()
 
 // Middleware to verify JWT and extract user information
 const authenticateJWT = (req, res, next) => {
- const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
+  const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
 
   if (!token) {
     return res.status(403).json({ message: 'Token required' });
@@ -236,4 +241,3 @@ process.on('SIGINT', () => {
       process.exit(1);
     });
 });
-
