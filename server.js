@@ -1,4 +1,9 @@
-c
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { Client } = require('pg');
+const cors = require('cors');
+
 const app = express();
 const port = 3000;
 
@@ -231,3 +236,4 @@ process.on('SIGINT', () => {
       process.exit(1);
     });
 });
+
