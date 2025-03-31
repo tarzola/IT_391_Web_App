@@ -126,28 +126,61 @@ app.post('/inventory', authenticateJWT, (req, res) => {
   );
 });
 
-// Update inventory item by ID (for logged-in user only)
-app.put('/inventory/:id', authenticateJWT, (req, res) => {
+// PUT route: Update the quantity of an item after it is used
+app.put('/inventory/:id/use', authenticateJWT, (req, res) => {
   const { id } = req.params;
-  const { name, quantity, expiration_date } = req.body;
+  const { quantity } = req.body; // Quantity to be used
 
-  client.query(
-    'UPDATE inventory SET name = $1, quantity = $2, expiration_date = $3 WHERE id = $4 AND user_id = $5 RETURNING *',
-    [name, quantity, expiration_date, id, req.user.id],
-    (err, result) => {
-      if (err) {
-        console.error('Error updating item:', err);
-        res.status(500).send('Error updating item');
-      } else if (result.rows.length === 0) {
-        res.status(404).send('Item not found or unauthorized');
-      } else {
-        res.json(result.rows[0]);
-      }
+  // Check if the item exists
+  client.query('SELECT * FROM inventory WHERE id = $1 AND user_id = $2', [id, req.user.id], (err, result) => {
+    if (err) {
+      console.error('Error fetching item:', err);
+      return res.status(500).send('Error fetching item');
     }
-  );
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('Item not found or unauthorized');
+    }
+
+    const currentQuantity = result.rows[0].quantity;
+
+    // Check if there’s enough quantity to reduce
+    if (currentQuantity < quantity) {
+      return res.status(400).send('Not enough quantity to use');
+    }
+
+    // Update the quantity (if it's greater than the used amount)
+    const newQuantity = currentQuantity - quantity;
+    if (newQuantity > 0) {
+      client.query(
+        'UPDATE inventory SET quantity = $1 WHERE id = $2 AND user_id = $3 RETURNING *',
+        [newQuantity, id, req.user.id],
+        (err, result) => {
+          if (err) {
+            console.error('Error updating item:', err);
+            return res.status(500).send('Error updating item');
+          }
+          res.json(result.rows[0]); // Return updated item
+        }
+      );
+    } else {
+      // If the quantity reaches zero, remove the item
+      client.query(
+        'DELETE FROM inventory WHERE id = $1 AND user_id = $2 RETURNING *',
+        [id, req.user.id],
+        (err, result) => {
+          if (err) {
+            console.error('Error deleting item:', err);
+            return res.status(500).send('Error deleting item');
+          }
+          res.send('Item deleted successfully');
+        }
+      );
+    }
+  });
 });
 
-// Delete inventory item by ID (for logged-in user only)
+// DELETE route: Remove an item from inventory completely
 app.delete('/inventory/:id', authenticateJWT, (req, res) => {
   const { id } = req.params;
 
