@@ -75,7 +75,12 @@
         });
 
         const data = await response.json();
-        alert('Item added to inventory: ' + data.name);
+        if (response.ok) {
+          alert('Item added to inventory: ' + data.name);
+          document.getElementById('add-item-form').reset(); // Clear the form after adding item
+        } else {
+          alert('Error adding item: ' + data.message);
+        }
       } catch (error) {
         alert('Error adding item: ' + error.message);
       }
@@ -83,3 +88,4 @@
   </script>
 </body>
 </html>
+
