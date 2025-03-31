@@ -37,8 +37,22 @@
 
   <script>
     async function loadInventory() {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        alert('Please log in to view your pantry');
+        return;
+      }
+
       try {
-        const response = await fetch('http://10.111.20.126:3000/inventory');
+        const response = await fetch('http://10.111.20.126:3000/inventory', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // Add the token here for user authentication
+          }
+        });
+
         const inventory = await response.json();
 
         const pantryItemsDiv = document.getElementById('pantry-items');
