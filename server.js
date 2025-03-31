@@ -30,7 +30,7 @@ client.connect()
 
 // Middleware to verify JWT and extract user information
 const authenticateJWT = (req, res, next) => {
-  const token = req.header('Authorization')?.split(' ')[1];
+ const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
 
   if (!token) {
     return res.status(403).json({ message: 'Token required' });
