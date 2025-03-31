@@ -58,7 +58,6 @@
         const pantryItemsDiv = document.getElementById('pantry-items');
         const fridgeItemsDiv = document.getElementById('fridge-items');
 
-        // Clear existing items before re-rendering
         pantryItemsDiv.innerHTML = '';
         fridgeItemsDiv.innerHTML = '';
 
@@ -81,7 +80,6 @@
       }
     }
 
-    // Function to handle the use item logic
     async function useItem(itemId, itemName, itemType) {
       const quantityUsed = prompt(`How much of ${itemName} did you use?`);
       if (isNaN(quantityUsed) || quantityUsed <= 0) {
@@ -96,33 +94,32 @@
       }
 
       try {
-  const response = await fetch(`http://10.111.20.126:3000/inventory/${itemId}/use`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-    body: JSON.stringify({ quantity: quantityUsed }),
-  });
+        const response = await fetch(`http://10.111.20.126:3000/inventory/${itemId}/use`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ quantity: quantityUsed }),
+        });
 
-  let message;
-  try {
-    message = await response.json(); // Works if response is JSON
-  } catch (e) {
-    message = await response.text(); // Fallback if it's plain text
-  }
+        let message;
+        try {
+          message = await response.json(); // Works if response is JSON
+        } catch (e) {
+          message = await response.text(); // Fallback if it's plain text
+        }
 
-  if (response.ok) {
-    alert(`You used ${quantityUsed} of ${itemName}.`);
-    loadInventory(); // Refresh inventory
-  } else {
-    alert('Error updating item: ' + (message.message || message));
-  }
+        if (response.ok) {
+          alert(`You used ${quantityUsed} of ${itemName}.`);
+          loadInventory(); // Refresh inventory
+        } else {
+          alert('Error updating item: ' + (message.message || message));
+        }
 
-} catch (error) {
-  alert('Network error: ' + error.message);
-}
-
+      } catch (error) {
+        alert('Network error: ' + error.message);
+      }
     }
 
     function logout() {
@@ -136,4 +133,3 @@
 </body>
 
 </html>
-
