@@ -111,6 +111,7 @@ app.get('/inventory', authenticateJWT, (req, res) => {
 app.post('/inventory', authenticateJWT, (req, res) => {
   const { name, quantity, expiration_date, type } = req.body;
 
+  // Ensure the user ID is captured from the JWT
   client.query(
     'INSERT INTO inventory (name, quantity, expiration_date, type, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
     [name, quantity, expiration_date, type, req.user.id],
@@ -119,7 +120,7 @@ app.post('/inventory', authenticateJWT, (req, res) => {
         console.error('Error adding item:', err);
         res.status(500).send('Error adding item');
       } else {
-        res.status(201).json(result.rows[0]); // Return the newly created item specific to the user
+        res.status(201).json(result.rows[0]); // Successfully added the item
       }
     }
   );
