@@ -49,7 +49,7 @@
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Add the token here for user authentication
+            'Authorization': `Bearer ${token}`,
           }
         });
 
@@ -57,6 +57,10 @@
 
         const pantryItemsDiv = document.getElementById('pantry-items');
         const fridgeItemsDiv = document.getElementById('fridge-items');
+
+        // Clear existing items before re-rendering
+        pantryItemsDiv.innerHTML = '';
+        fridgeItemsDiv.innerHTML = '';
 
         inventory.forEach(item => {
           const div = document.createElement('div');
@@ -102,19 +106,21 @@
         });
 
         let message;
-      try {
-        message = await response.json(); // Works if response is JSON
-      } catch (e) {
-        message = await response.text(); // Fallback if it's plain text
-      }
-      
-      if (response.ok) {
-        alert(`You used ${quantityUsed} of ${itemName}.`);
-        loadInventory(); // Refresh inventory
-      } else {
-        alert('Error updating item: ' + (message.message || message));
-      }
+        try {
+          message = await response.json(); // Works if response is JSON
+        } catch (e) {
+          message = await response.text(); // Fallback if it's plain text
+        }
 
+        if (response.ok) {
+          alert(`You used ${quantityUsed} of ${itemName}.`);
+          loadInventory(); // Refresh inventory
+        } else {
+          alert('Error updating item: ' + (message.message || message));
+        }
+      } catch (error) {
+        alert('Network error: ' + error.message);
+      }
     }
 
     function logout() {
@@ -128,3 +134,4 @@
 </body>
 
 </html>
+
