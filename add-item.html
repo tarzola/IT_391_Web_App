@@ -27,6 +27,20 @@
       <label for="item-quantity">Quantity:</label>
       <input type="number" id="item-quantity" required /><br /><br />
 
+      <label for="item-unit">Unit:</label>
+      <select id="item-unit" required>
+        <option value="unit">unit</option>
+        <option value="g">grams (g)</option>
+        <option value="kg">kilograms (kg)</option>
+        <option value="oz">ounces (oz)</option>
+        <option value="lb">pounds (lb)</option>
+        <option value="ml">milliliters (ml)</option>
+        <option value="l">liters (L)</option>
+        <option value="cup">cups</option>
+        <option value="tbsp">tablespoons</option>
+        <option value="tsp">teaspoons</option>
+      </select><br /><br />
+
       <label for="item-expiration">Expiration Date:</label>
       <input type="date" id="item-expiration" required /><br /><br />
 
@@ -68,6 +82,7 @@
 
       const name = document.getElementById('item-name').value;
       const quantity = document.getElementById('item-quantity').value;
+      const unit = document.getElementById('item-unit').value;
       const expiration_date = document.getElementById('item-expiration').value;
       const type = document.getElementById('item-type').value;
       const upc = document.getElementById('upc-code').value;
@@ -86,7 +101,7 @@
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({ name, quantity, expiration_date, type, upc })
+          body: JSON.stringify({ name, quantity, unit, expiration_date, type, upc })
         });
 
         const data = await response.json();
