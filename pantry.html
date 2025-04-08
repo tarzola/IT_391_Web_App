@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Pantry</title>
   <link rel="stylesheet" href="pantry_style.css" />
+  <style>
+    .inventory-item.expired {
+      color: red;
+      font-weight: bold;
+    }
+
+    .sort-controls {
+      margin: 10px;
+    }
+
+    .inventory-item button {
+      margin-left: 10px;
+    }
+  </style>
 </head>
 
 <body>
@@ -20,6 +34,14 @@
     <button id="logout-btn">Logout</button>
   </header>
 
+  <div class="sort-controls">
+    <label for="sort">Sort by:</label>
+    <select id="sort">
+      <option value="name">Name</option>
+      <option value="expiration">Expiration Date</option>
+    </select>
+  </div>
+
   <section class="section-container">
     <h2>Pantry Items</h2>
     <div id="pantry-items"></div>
@@ -31,9 +53,42 @@
   </section>
 
   <script>
+    let currentInventory = [];
+
+    function isExpired(dateStr) {
+      const today = new Date().toISOString().split('T')[0];
+      return dateStr < today;
+    }
+
+    function renderInventory(sortedInventory) {
+      const pantryItemsDiv = document.getElementById('pantry-items');
+      const fridgeItemsDiv = document.getElementById('fridge-items');
+      pantryItemsDiv.innerHTML = '';
+      fridgeItemsDiv.innerHTML = '';
+
+      sortedInventory.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('inventory-item');
+        if (isExpired(item.expiration_date)) {
+          div.classList.add('expired');
+        }
+
+        div.innerHTML = `
+          <span>${item.name} - ${item.quantity} ${item.unit || ''} (Expires: ${item.expiration_date})</span>
+          <button onclick="useItem(${item.id}, '${item.name}')">Use</button>
+          <button onclick="deleteItem(${item.id}, '${item.name}')">Delete</button>
+        `;
+
+        if (item.type === 'pantry') {
+          pantryItemsDiv.appendChild(div);
+        } else if (item.type === 'fridge') {
+          fridgeItemsDiv.appendChild(div);
+        }
+      });
+    }
+
     async function loadInventory() {
       const token = localStorage.getItem('token');
-
       if (!token) {
         alert('Please log in to view your pantry');
         return;
@@ -48,34 +103,27 @@
           }
         });
 
-        const inventory = await response.json();
-
-        const pantryItemsDiv = document.getElementById('pantry-items');
-        const fridgeItemsDiv = document.getElementById('fridge-items');
-
-        pantryItemsDiv.innerHTML = '';
-        fridgeItemsDiv.innerHTML = '';
-
-        inventory.forEach(item => {
-          const div = document.createElement('div');
-          div.classList.add('inventory-item');
-          div.innerHTML = `
-            <span>${item.name} - ${item.quantity} ${item.unit || ''} (Expires: ${item.expiration_date})</span>
-            <button onclick="useItem(${item.id}, '${item.name}', '${item.type}')">Use</button>
-          `;
-
-          if (item.type === 'pantry') {
-            pantryItemsDiv.appendChild(div);
-          } else if (item.type === 'fridge') {
-            fridgeItemsDiv.appendChild(div);
-          }
-        });
+        currentInventory = await response.json();
+        sortAndRender();
       } catch (err) {
         console.error('Error fetching inventory:', err);
       }
     }
 
-    async function useItem(itemId, itemName, itemType) {
+    function sortAndRender() {
+      const sortValue = document.getElementById('sort').value;
+      const sorted = [...currentInventory];
+
+      if (sortValue === 'name') {
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortValue === 'expiration') {
+        sorted.sort((a, b) => new Date(a.expiration_date) - new Date(b.expiration_date));
+      }
+
+      renderInventory(sorted);
+    }
+
+    async function useItem(itemId, itemName) {
       const quantityUsed = prompt(`How much of ${itemName} did you use?`);
       if (isNaN(quantityUsed) || quantityUsed <= 0) {
         alert('Invalid quantity');
@@ -98,20 +146,43 @@
           body: JSON.stringify({ quantity: quantityUsed }),
         });
 
-        let message;
-        try {
-          message = await response.json(); // Works if response is JSON
-        } catch (e) {
-          message = await response.text(); // Fallback if it's plain text
-        }
-
         if (response.ok) {
           alert(`You used ${quantityUsed} of ${itemName}.`);
-          loadInventory(); // Refresh inventory
+          loadInventory();
         } else {
-          alert('Error updating item: ' + (message.message || message));
+          const msg = await response.json();
+          alert('Error updating item: ' + (msg.message || msg));
         }
+      } catch (error) {
+        alert('Network error: ' + error.message);
+      }
+    }
 
+    async function deleteItem(itemId, itemName) {
+      const confirmDelete = confirm(`Are you sure you want to delete ${itemName}?`);
+      if (!confirmDelete) return;
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please log in to delete inventory');
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://10.111.20.126:3000/inventory/${itemId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          alert(`${itemName} deleted successfully.`);
+          loadInventory();
+        } else {
+          const msg = await response.json();
+          alert('Error deleting item: ' + (msg.message || msg));
+        }
       } catch (error) {
         alert('Network error: ' + error.message);
       }
@@ -123,6 +194,7 @@
     }
 
     document.getElementById('logout-btn').addEventListener('click', logout);
+    document.getElementById('sort').addEventListener('change', sortAndRender);
     document.addEventListener('DOMContentLoaded', loadInventory);
   </script>
 </body>
