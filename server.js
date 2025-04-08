@@ -170,6 +170,28 @@ app.put('/inventory/:id/use', authenticateJWT, (req, res) => {
   });
 });
 
+// ✏️ Edit inventory item (NEW!)
+app.put('/inventory/:id', authenticateJWT, async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity, unit, expiration_date } = req.body;
+
+  try {
+    const result = await client.query(
+      'UPDATE inventory SET name = $1, quantity = $2, unit = $3, expiration_date = $4 WHERE id = $5 AND user_id = $6 RETURNING *',
+      [name, quantity, unit, expiration_date, id, req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Item not found or unauthorized' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating item:', err);
+    res.status(500).json({ message: 'Failed to update item' });
+  }
+});
+
 // Delete item
 app.delete('/inventory/:id', authenticateJWT, (req, res) => {
   const { id } = req.params;
