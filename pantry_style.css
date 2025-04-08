@@ -1,77 +1,219 @@
-.inventory-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.inventory-card {
-  background: #fff;
-  padding: 15px 20px;
-  border-radius: 8px;
+/* Header/Nav Styling */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #33AD29;
+  color: white;
+  text-align: center;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 15px 20px;
+}
+
+body {
+  padding-top: 90px;
+  background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  margin: 0 10px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  background: #2a8e24;
+  font-weight: bold;
+}
+
+nav ul li a:hover {
+  background: #1f6e1c;
+}
+
+/* Logout Button */
+#logout-btn {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
   font-size: 16px;
-  transition: transform 0.2s;
+}
+
+#logout-btn:hover {
+  background: #cc0000;
+}
+
+/* Sort Bar */
+.sort-controls {
+  position: sticky;
+  top: 80px;
+  background: #e8f5e9;
+  padding: 15px 25px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid #ccc;
+}
+
+.sort-controls label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.sort-controls select {
+  padding: 5px 10px;
+  font-size: 15px;
+  border-radius: 4px;
+}
+
+/* Sections */
+.section-container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.inventory-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Inventory Card */
+.inventory-card {
+  background: #ffffff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  width: calc(50% - 20px);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.2s ease;
 }
 
 .inventory-card:hover {
-  transform: scale(1.01);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .item-info h3 {
-  margin: 0;
+  margin: 0 0 5px;
   font-size: 18px;
 }
 
+.item-info p {
+  margin: 4px 0;
+  font-size: 15px;
+}
+
+.expired-text {
+  color: red;
+  font-weight: bold;
+}
+
+/* Badges */
 .badge {
-  font-size: 13px;
-  margin-top: 5px;
   display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: bold;
 }
 
 .badge.good {
-  background: #e0f2f1;
-  color: #00796b;
+  background-color: #d4edda;
+  color: #155724;
 }
 
 .badge.expired {
-  background: #ffebee;
-  color: #c62828;
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .action-buttons button {
-  background: transparent;
+  padding: 6px 12px;
+  font-size: 14px;
   border: none;
-  font-size: 18px;
+  border-radius: 6px;
   cursor: pointer;
-  margin-left: 8px;
+  font-weight: bold;
 }
 
-.use-btn i {
-  color: #4caf50;
+.use-btn {
+  background-color: #007bff;
+  color: white;
 }
 
-.edit-btn i {
-  color: #2196f3;
+.use-btn:hover {
+  background-color: #0056b3;
 }
 
-.delete-btn i {
-  color: #f44336;
+.edit-btn {
+  background-color: #ffc107;
+  color: black;
 }
 
-@media (max-width: 600px) {
+.edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Mobile Layout */
+@media (max-width: 768px) {
   .inventory-card {
+    width: 100%;
     flex-direction: column;
     align-items: flex-start;
   }
 
   .action-buttons {
     margin-top: 10px;
-    display: flex;
-    gap: 10px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .sort-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
   }
 }
