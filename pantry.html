@@ -11,9 +11,6 @@
       font-weight: bold;
     }
 
-    .sort-controls {
-      margin: 10px;
-    }
 
     .inventory-item button {
       margin-left: 10px;
@@ -34,13 +31,14 @@
     <button id="logout-btn">Logout</button>
   </header>
 
-  <div class="sort-controls">
-    <label for="sort">Sort by:</label>
-    <select id="sort">
-      <option value="name">Name</option>
-      <option value="expiration">Expiration Date</option>
-    </select>
-  </div>
+  <div class="sort-controls" style="padding: 15px 25px; background: #e8f5e9;">
+  <label for="sort"><strong>Sort by:</strong></label>
+  <select id="sort" style="padding: 5px; margin-left: 10px;">
+    <option value="name">Name</option>
+    <option value="expiration">Expiration Date</option>
+  </select>
+</div>
+
 
   <section class="section-container">
     <h2>Pantry Items</h2>
