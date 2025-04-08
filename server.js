@@ -105,7 +105,11 @@ app.get('/inventory', authenticateJWT, (req, res) => {
 // Add inventory item (NOW INCLUDES UPC)
 app.post('/inventory', authenticateJWT, (req, res) => {
   const { name, quantity, expiration_date, type, upc } = req.body;
-
+  
+if (quantity > 1000) {
+    return res.status(400).json({ error: 'Quantity cannot exceed 1000' });
+  }
+  
   client.query(
     'INSERT INTO inventory (name, quantity, expiration_date, type, upc, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
     [name, quantity, expiration_date, type, upc, req.user.id],
