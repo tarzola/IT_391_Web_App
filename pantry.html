@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Pantry</title>
   <link rel="stylesheet" href="pantry_style.css" />
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -61,31 +60,29 @@
       fridgeItemsDiv.innerHTML = '';
 
       sortedInventory.forEach(item => {
-        const div = document.createElement('div');
-        div.classList.add('inventory-card');
+        const card = document.createElement('div');
+        card.classList.add('inventory-card');
+        if (isExpired(item.expiration_date)) {
+          card.classList.add('expired');
+        }
 
-        const expired = isExpired(item.expiration_date);
-        const badge = expired
-          ? `<span class="badge expired">Expired</span>`
-          : `<span class="badge good">Expires: ${formatDate(item.expiration_date)}</span>`;
-
-        div.innerHTML = `
+        card.innerHTML = `
           <div class="item-info">
             <h3>${item.name}</h3>
             <p>${item.quantity} ${item.unit || ''}</p>
-            ${badge}
+            <p class="exp-date">${isExpired(item.expiration_date) ? '<span class="expired-text">Expired</span>' : `Expires: ${formatDate(item.expiration_date)}`}</p>
           </div>
           <div class="action-buttons">
-            <button onclick="useItem(${item.id}, '${item.name}')" class="use-btn"><i class="fas fa-utensils"></i></button>
-            <button onclick="editItem(${item.id})" class="edit-btn"><i class="fas fa-edit"></i></button>
-            <button onclick="deleteItem(${item.id}, '${item.name}')" class="delete-btn"><i class="fas fa-trash"></i></button>
+            <button class="use-btn" onclick="useItem(${item.id}, '${item.name}')">Use</button>
+            <button class="edit-btn" onclick="editItem(${item.id})">Edit</button>
+            <button class="delete-btn" onclick="deleteItem(${item.id}, '${item.name}')">Delete</button>
           </div>
         `;
 
         if (item.type === 'pantry') {
-          pantryItemsDiv.appendChild(div);
-        } else if (item.type === 'fridge') {
-          fridgeItemsDiv.appendChild(div);
+          pantryItemsDiv.appendChild(card);
+        } else {
+          fridgeItemsDiv.appendChild(card);
         }
       });
     }
@@ -99,7 +96,6 @@
 
       try {
         const response = await fetch('http://10.111.20.126:3000/inventory', {
-          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
@@ -226,4 +222,3 @@
   </script>
 </body>
 </html>
-
