@@ -37,16 +37,21 @@
       </select><br /><br />
 
       <label for="upc-code">UPC Code (Optional):</label>
-      <input type="text" id="upc-code" placeholder="Enter UPC code" /><br /><br />
+      <input type="text" id="upc-code" placeholder="Enter or scan UPC code" /><br /><br />
 
       <button type="submit">Add Item</button>
     </form>
 
     <h2>Barcode Scan</h2>
-    <!-- Implement barcode scanning functionality here -->
+    <div id="reader" style="width: 300px;"></div>
+    <p><strong>Scanned UPC:</strong> <span id="scanned-code">None</span></p>
   </section>
 
+  <!-- html5-qrcode library -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
   <script>
+    // Handle form submission
     document.getElementById('add-item-form').addEventListener('submit', async function(event) {
       event.preventDefault();
 
@@ -54,9 +59,8 @@
       const quantity = document.getElementById('item-quantity').value;
       const expiration_date = document.getElementById('item-expiration').value;
       const type = document.getElementById('item-type').value;
-      const upc = document.getElementById('upc-code').value; // UPC is included, but will not be used
+      const upc = document.getElementById('upc-code').value;
 
-      // Retrieve the token from localStorage
       const token = localStorage.getItem('token');
 
       if (!token) {
@@ -69,15 +73,16 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Add the token here for user authentication
+            'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({ name, quantity, expiration_date, type, upc }) // UPC is sent but not processed yet
+          body: JSON.stringify({ name, quantity, expiration_date, type, upc })
         });
 
         const data = await response.json();
         if (response.ok) {
           alert('Item added to inventory: ' + data.name);
-          document.getElementById('add-item-form').reset(); // Clear the form after adding item
+          document.getElementById('add-item-form').reset();
+          document.getElementById('scanned-code').textContent = 'None';
         } else {
           alert('Error adding item: ' + data.message);
         }
@@ -85,8 +90,17 @@
         alert('Error adding item: ' + error.message);
       }
     });
+
+    // Setup barcode scanner
+    function onScanSuccess(decodedText, decodedResult) {
+      document.getElementById('upc-code').value = decodedText;
+      document.getElementById('scanned-code').textContent = decodedText;
+      html5QrcodeScanner.clear(); // Stop scanning after first match
+    }
+
+    const html5QrcodeScanner = new Html5QrcodeScanner(
+      "reader", { fps: 10, qrbox: 250 }, false);
+    html5QrcodeScanner.render(onScanSuccess);
   </script>
 </body>
 </html>
-
-
