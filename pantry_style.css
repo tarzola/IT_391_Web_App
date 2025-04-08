@@ -1,101 +1,77 @@
-.inventory-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f9f9f9;
-    padding: 12px 15px;
-    margin: 8px 0;
-    border-radius: 6px;
-    font-size: 16px;
+.inventory-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.item-details {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+.inventory-card {
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-size: 16px;
+  transition: transform 0.2s;
 }
 
-.item-name {
-    font-weight: bold;
+.inventory-card:hover {
+  transform: scale(1.01);
 }
 
-.item-qty,
-.item-exp {
-    font-size: 14px;
-    margin-top: 4px;
+.item-info h3 {
+  margin: 0;
+  font-size: 18px;
 }
 
-.item-exp.expired-text {
-    color: red;
-    font-weight: bold;
+.badge {
+  font-size: 13px;
+  margin-top: 5px;
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
 }
 
-.item-buttons button {
-    margin-left: 8px;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    background: #eee;
-    transition: background 0.3s;
+.badge.good {
+  background: #e0f2f1;
+  color: #00796b;
 }
 
-.item-buttons button:hover {
-    background: #ddd;
+.badge.expired {
+  background: #ffebee;
+  color: #c62828;
 }
+
+.action-buttons button {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.use-btn i {
+  color: #4caf50;
+}
+
+.edit-btn i {
+  color: #2196f3;
+}
+
+.delete-btn i {
+  color: #f44336;
+}
+
 @media (max-width: 600px) {
-  .inventory-item {
+  .inventory-card {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .item-details {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .item-buttons {
-    width: 100%;
+  .action-buttons {
+    margin-top: 10px;
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-
-  .item-buttons button {
-    flex: 1 1 30%;
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .sort-controls {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 15px 20px;
-  }
-
-  .sort-controls select {
-    width: 100%;
-    margin-left: 0;
-    margin-top: 5px;
-  }
-
-  .section-container {
-    width: 95%;
-    padding: 15px;
-  }
-
-  nav ul {
-    flex-direction: column;
     gap: 10px;
-  }
-
-  nav ul li {
-    margin: 5px 0;
-  }
-
-  #logout-btn {
-    padding: 8px 12px;
-    font-size: 14px;
   }
 }
