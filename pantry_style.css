@@ -1,22 +1,22 @@
-/* Header/Nav Styling */
+/* Header */
 header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  height: 70px; /* NEW: Declare fixed height */
   background: #33AD29;
   color: white;
-  text-align: center;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 0 20px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
 
 body {
-  padding-top: 90px;
+  padding-top: 130px; /* Adjust to fit header + sort bar */
   background-color: #f4f4f4;
   font-family: Arial, sans-serif;
   margin: 0;
@@ -63,14 +63,14 @@ nav ul li a:hover {
 
 /* Sort Bar */
 .sort-controls {
-  position: sticky;
-  top: 80px;
+  position: fixed;
+  top: 70px; /* Exactly below the header */
+  width: 100%;
   background: #e8f5e9;
-  padding: 30px 25px;
+  padding: 10px 25px;
   z-index: 999;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   border-bottom: 1px solid #ccc;
 }
 
