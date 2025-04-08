@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,16 +22,12 @@
 
   <section class="section-container">
     <h2>Pantry Items</h2>
-    <div id="pantry-items">
-      <!-- Display pantry items here -->
-    </div>
+    <div id="pantry-items"></div>
   </section>
 
   <section class="section-container">
     <h2>Fridge Items</h2>
-    <div id="fridge-items">
-      <!-- Display fridge items here -->
-    </div>
+    <div id="fridge-items"></div>
   </section>
 
   <script>
@@ -65,7 +60,7 @@
           const div = document.createElement('div');
           div.classList.add('inventory-item');
           div.innerHTML = `
-            <span>${item.name} - ${item.quantity} (Expires: ${item.expiration_date})</span>
+            <span>${item.name} - ${item.quantity} ${item.unit || ''} (Expires: ${item.expiration_date})</span>
             <button onclick="useItem(${item.id}, '${item.name}', '${item.type}')">Use</button>
           `;
 
@@ -131,5 +126,5 @@
     document.addEventListener('DOMContentLoaded', loadInventory);
   </script>
 </body>
-
 </html>
+
