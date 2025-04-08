@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Pantry</title>
   <link rel="stylesheet" href="pantry_style.css" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -30,12 +31,12 @@
 
   <section class="section-container">
     <h2>Pantry Items</h2>
-    <div id="pantry-items"></div>
+    <div id="pantry-items" class="inventory-container"></div>
   </section>
 
   <section class="section-container">
     <h2>Fridge Items</h2>
-    <div id="fridge-items"></div>
+    <div id="fridge-items" class="inventory-container"></div>
   </section>
 
   <script>
@@ -46,9 +47,11 @@
       return dateStr < today;
     }
 
-    function formatDate(isoString) {
-      const options = { year: 'numeric', month: 'short', day: 'numeric' };
-      return new Date(isoString).toLocaleDateString(undefined, options);
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric'
+      });
     }
 
     function renderInventory(sortedInventory) {
@@ -58,23 +61,24 @@
       fridgeItemsDiv.innerHTML = '';
 
       sortedInventory.forEach(item => {
-        const isItemExpired = isExpired(item.expiration_date);
         const div = document.createElement('div');
-        div.classList.add('inventory-item');
-        if (isItemExpired) div.classList.add('expired');
+        div.classList.add('inventory-card');
+
+        const expired = isExpired(item.expiration_date);
+        const badge = expired
+          ? `<span class="badge expired">Expired</span>`
+          : `<span class="badge good">Expires: ${formatDate(item.expiration_date)}</span>`;
 
         div.innerHTML = `
-          <div class="item-details">
-            <span class="item-name">${item.name}</span>
-            <span class="item-qty">${item.quantity} ${item.unit || ''}</span>
-            <span class="item-exp ${isItemExpired ? 'expired-text' : ''}">
-              ${isItemExpired ? '⚠️ ' : ''}Expires: ${formatDate(item.expiration_date)}
-            </span>
+          <div class="item-info">
+            <h3>${item.name}</h3>
+            <p>${item.quantity} ${item.unit || ''}</p>
+            ${badge}
           </div>
-          <div class="item-buttons">
-            <button onclick="useItem(${item.id}, '${item.name}')">Use</button>
-            <button onclick="editItem(${item.id})">Edit</button>
-            <button onclick="deleteItem(${item.id}, '${item.name}')">Delete</button>
+          <div class="action-buttons">
+            <button onclick="useItem(${item.id}, '${item.name}')" class="use-btn"><i class="fas fa-utensils"></i></button>
+            <button onclick="editItem(${item.id})" class="edit-btn"><i class="fas fa-edit"></i></button>
+            <button onclick="deleteItem(${item.id}, '${item.name}')" class="delete-btn"><i class="fas fa-trash"></i></button>
           </div>
         `;
 
@@ -95,6 +99,7 @@
 
       try {
         const response = await fetch('http://10.111.20.126:3000/inventory', {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
@@ -123,7 +128,10 @@
 
     async function useItem(itemId, itemName) {
       const quantityUsed = prompt(`How much of ${itemName} did you use?`);
-      if (isNaN(quantityUsed) || quantityUsed <= 0) return alert('Invalid quantity');
+      if (isNaN(quantityUsed) || quantityUsed <= 0) {
+        alert('Invalid quantity');
+        return;
+      }
 
       const token = localStorage.getItem('token');
       try {
@@ -136,11 +144,10 @@
           body: JSON.stringify({ quantity: quantityUsed }),
         });
 
-        const msg = await response.json();
         if (response.ok) {
-          alert(`Used ${quantityUsed} of ${itemName}.`);
           loadInventory();
         } else {
+          const msg = await response.json();
           alert('Error updating item: ' + (msg.message || msg));
         }
       } catch (error) {
@@ -173,11 +180,10 @@
           body: JSON.stringify({ name, quantity, unit, expiration_date }),
         });
 
-        const msg = await response.json();
         if (response.ok) {
-          alert("Item updated successfully!");
           loadInventory();
         } else {
+          const msg = await response.json();
           alert('Error updating item: ' + (msg.message || msg));
         }
       } catch (err) {
@@ -198,12 +204,11 @@
           }
         });
 
-        const msg = await response.text();
         if (response.ok) {
-          alert(`${itemName} deleted.`);
           loadInventory();
         } else {
-          alert('Error deleting item: ' + msg);
+          const msg = await response.json();
+          alert('Error deleting item: ' + (msg.message || msg));
         }
       } catch (error) {
         alert('Network error: ' + error.message);
@@ -221,3 +226,4 @@
   </script>
 </body>
 </html>
+
