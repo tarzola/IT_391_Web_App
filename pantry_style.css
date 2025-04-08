@@ -68,6 +68,12 @@ nav ul li a:hover {
     padding: 15px;
     border-radius: 5px;
 }
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 
 /* Logout button styling */
 #logout-btn {
