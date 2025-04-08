@@ -8,11 +8,7 @@ const app = express();
 const port = 3000;
 
 // === CORS Configuration ===
-// Allow any origin for development/demo purposes
-app.use(cors()); // Open CORS to all origins — safe for internal demo
-// You can restrict this after demo like:
-// app.use(cors({ origin: 'http://10.111.20.126' }));
-
+app.use(cors()); // Open CORS to all origins for demo/dev
 app.use(express.json()); // Body parser for JSON
 
 // === PostgreSQL Setup ===
@@ -106,13 +102,13 @@ app.get('/inventory', authenticateJWT, (req, res) => {
   });
 });
 
-// Add inventory item
+// Add inventory item (NOW INCLUDES UPC)
 app.post('/inventory', authenticateJWT, (req, res) => {
-  const { name, quantity, expiration_date, type } = req.body;
+  const { name, quantity, expiration_date, type, upc } = req.body;
 
   client.query(
-    'INSERT INTO inventory (name, quantity, expiration_date, type, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-    [name, quantity, expiration_date, type, req.user.id],
+    'INSERT INTO inventory (name, quantity, expiration_date, type, upc, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+    [name, quantity, expiration_date, type, upc, req.user.id],
     (err, result) => {
       if (err) {
         console.error('Error adding item:', err);
@@ -226,4 +222,3 @@ process.on('SIGINT', () => {
       process.exit(1);
     });
 });
-
