@@ -39,10 +39,14 @@
       <label for="upc-code">UPC Code (Optional):</label>
       <input type="text" id="upc-code" placeholder="Enter or scan UPC code" /><br /><br />
 
+      <!-- Scan with phone link -->
+      <p><strong>Or scan with your phone:</strong></p>
+      <a class="btn" href="https://qrscanner.org/upc-to-url/?redirect=http://10.111.20.126/add-item.html?upc=" target="_blank">📷 Scan with Phone</a><br /><br />
+
       <button type="submit">Add Item</button>
     </form>
 
-    <h2>Barcode Scan</h2>
+    <h2>Barcode Scan (Localhost Only)</h2>
     <div id="reader" style="width: 300px;"></div>
     <p><strong>Scanned UPC:</strong> <span id="scanned-code">None</span></p>
   </section>
@@ -51,6 +55,13 @@
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <script>
+    // Autofill UPC from URL (from redirect link)
+    const params = new URLSearchParams(window.location.search);
+    const upcFromUrl = params.get('upc');
+    if (upcFromUrl) {
+      document.getElementById('upc-code').value = upcFromUrl;
+    }
+
     // Handle form submission
     document.getElementById('add-item-form').addEventListener('submit', async function(event) {
       event.preventDefault();
@@ -91,7 +102,7 @@
       }
     });
 
-    // Setup barcode scanner
+    // Setup webcam barcode scanner (only works on localhost or HTTPS)
     function onScanSuccess(decodedText, decodedResult) {
       document.getElementById('upc-code').value = decodedText;
       document.getElementById('scanned-code').textContent = decodedText;
