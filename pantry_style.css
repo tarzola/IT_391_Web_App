@@ -4,7 +4,7 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  height: 70px; /* NEW: Declare fixed height */
+  height: 70px;
   background: #33AD29;
   color: white;
   display: flex;
@@ -15,13 +15,15 @@ header {
   z-index: 1000;
 }
 
+/* Body Padding (for header + sort bar visibility) */
 body {
-  padding-top: 130px; /* Adjust to fit header + sort bar */
+  padding-top: 130px;
   background-color: #f4f4f4;
   font-family: Arial, sans-serif;
   margin: 0;
 }
 
+/* Navigation */
 nav ul {
   list-style: none;
   display: flex;
@@ -64,13 +66,15 @@ nav ul li a:hover {
 /* Sort Bar */
 .sort-controls {
   position: fixed;
-  top: 70px; /* Exactly below the header */
+  top: 70px;
+  left: 0;
   width: 100%;
   background: #e8f5e9;
-  padding: 10px 25px;
+  padding: 15px 25px;
   z-index: 999;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   border-bottom: 1px solid #ccc;
 }
 
@@ -80,12 +84,13 @@ nav ul li a:hover {
 }
 
 .sort-controls select {
-  padding: 5px 10px;
+  padding: 6px 10px;
   font-size: 15px;
   border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
-/* Sections */
+/* Section Cards */
 .section-container {
   width: 90%;
   max-width: 1000px;
@@ -130,12 +135,13 @@ nav ul li a:hover {
   font-size: 15px;
 }
 
+/* Expired Badge */
 .expired-text {
   color: red;
   font-weight: bold;
 }
 
-/* Badges */
+/* Status Badges */
 .badge {
   display: inline-block;
   padding: 4px 8px;
@@ -154,7 +160,7 @@ nav ul li a:hover {
   color: #721c24;
 }
 
-/* Action Buttons */
+/* Buttons - Label Only, No Icons */
 .action-buttons {
   display: flex;
   gap: 10px;
@@ -197,7 +203,7 @@ nav ul li a:hover {
   background-color: #c82333;
 }
 
-/* Mobile Layout */
+/* Mobile-Friendly Layout */
 @media (max-width: 768px) {
   .inventory-card {
     width: 100%;
@@ -217,3 +223,4 @@ nav ul li a:hover {
     padding: 15px;
   }
 }
+
