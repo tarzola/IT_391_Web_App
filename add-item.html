@@ -53,7 +53,6 @@
       <label for="upc-code">UPC Code (Optional):</label>
       <input type="text" id="upc-code" placeholder="Enter or scan UPC code" /><br /><br />
 
-      <!-- Scan with phone link -->
       <p><strong>Or scan with your phone:</strong></p>
       <a class="btn" href="https://qrscanner.org/upc-to-url/?redirect=http://10.111.20.126/add-item.html?upc=" target="_blank">📷 Scan with Phone</a><br /><br />
 
@@ -65,18 +64,34 @@
     <p><strong>Scanned UPC:</strong> <span id="scanned-code">None</span></p>
   </section>
 
-  <!-- html5-qrcode library -->
   <script src="https://unpkg.com/html5-qrcode"></script>
-
   <script>
-    // Autofill UPC from URL (from redirect link)
     const params = new URLSearchParams(window.location.search);
     const upcFromUrl = params.get('upc');
     if (upcFromUrl) {
       document.getElementById('upc-code').value = upcFromUrl;
+      fetchDetailsFromUPC(upcFromUrl);
     }
 
-    // Handle form submission
+    document.getElementById('upc-code').addEventListener('blur', () => {
+      const upc = document.getElementById('upc-code').value;
+      if (upc) {
+        fetchDetailsFromUPC(upc);
+      }
+    });
+
+    async function fetchDetailsFromUPC(upc) {
+      try {
+        const response = await fetch(`http://10.111.20.126:3000/upc-lookup/${upc}`);
+        const data = await response.json();
+        if (response.ok && data.title) {
+          document.getElementById('item-name').value = data.title;
+        }
+      } catch (error) {
+        console.error('Error fetching item info:', error);
+      }
+    }
+
     document.getElementById('add-item-form').addEventListener('submit', async function(event) {
       event.preventDefault();
 
@@ -88,7 +103,6 @@
       const upc = document.getElementById('upc-code').value;
 
       const token = localStorage.getItem('token');
-
       if (!token) {
         alert('Please login to add an item to the inventory');
         return;
@@ -117,16 +131,16 @@
       }
     });
 
-    // Setup webcam barcode scanner (only works on localhost or HTTPS)
     function onScanSuccess(decodedText, decodedResult) {
       document.getElementById('upc-code').value = decodedText;
       document.getElementById('scanned-code').textContent = decodedText;
-      html5QrcodeScanner.clear(); // Stop scanning after first match
+      fetchDetailsFromUPC(decodedText);
+      html5QrcodeScanner.clear();
     }
 
-    const html5QrcodeScanner = new Html5QrcodeScanner(
-      "reader", { fps: 10, qrbox: 250 }, false);
+    const html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 }, false);
     html5QrcodeScanner.render(onScanSuccess);
   </script>
 </body>
 </html>
+
