@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -53,6 +53,9 @@
       <label for="upc-code">UPC Code (Optional):</label>
       <input type="text" id="upc-code" placeholder="Enter or scan UPC code" /><br /><br />
 
+      <!-- NEW: Suggested info -->
+      <div id="suggested-info" style="display: none; font-style: italic; margin-bottom: 20px;"></div>
+
       <p><strong>Or scan with your phone:</strong></p>
       <a class="btn" href="https://qrscanner.org/upc-to-url/?redirect=http://10.111.20.126/add-item.html?upc=" target="_blank">📷 Scan with Phone</a><br /><br />
 
@@ -96,9 +99,18 @@
             document.getElementById('item-unit').value = data.unit.toLowerCase();
           }
 
-          // If expiration available, autofill it (we expect this to be rare)
           if (data.expiration_date) {
             document.getElementById('item-expiration').value = data.expiration_date;
+          }
+
+          // NEW: Display serving suggestion if available
+          const suggestionDiv = document.getElementById('suggested-info');
+          if (data.servings && data.servings.raw) {
+            suggestionDiv.innerText = `Suggested serving size: ${data.servings.raw}`;
+            suggestionDiv.style.display = 'block';
+          } else {
+            suggestionDiv.innerText = '';
+            suggestionDiv.style.display = 'none';
           }
         } else {
           console.warn('No product info returned for UPC:', upc);
@@ -139,6 +151,7 @@
           alert('Item added to inventory: ' + data.name);
           document.getElementById('add-item-form').reset();
           document.getElementById('scanned-code').textContent = 'None';
+          document.getElementById('suggested-info').style.display = 'none';
         } else {
           alert('Error adding item: ' + data.message);
         }
