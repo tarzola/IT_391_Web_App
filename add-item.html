@@ -42,7 +42,7 @@
       </select><br /><br />
 
       <label for="item-expiration">Expiration Date:</label>
-      <input type="date" id="item-expiration" required /><br /><br />
+      <input type="date" id="item-expiration" /><br /><br />
 
       <label for="item-type">Type:</label>
       <select id="item-type" required>
@@ -84,8 +84,24 @@
       try {
         const response = await fetch(`http://10.111.20.126:3000/upc-lookup/${upc}`);
         const data = await response.json();
+
         if (response.ok && data.title) {
           document.getElementById('item-name').value = data.title;
+
+          if (data.amount && !isNaN(data.amount)) {
+            document.getElementById('item-quantity').value = data.amount;
+          }
+
+          if (data.unit && data.unit !== 'serving') {
+            document.getElementById('item-unit').value = data.unit.toLowerCase();
+          }
+
+          // If expiration available, autofill it (we expect this to be rare)
+          if (data.expiration_date) {
+            document.getElementById('item-expiration').value = data.expiration_date;
+          }
+        } else {
+          console.warn('No product info returned for UPC:', upc);
         }
       } catch (error) {
         console.error('Error fetching item info:', error);
@@ -143,4 +159,3 @@
   </script>
 </body>
 </html>
-
