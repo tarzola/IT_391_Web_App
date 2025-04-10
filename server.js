@@ -244,9 +244,9 @@ app.get('/upc-lookup/:code', async (req, res) => {
     if (response.ok && data.title) {
       const result = {
         title: data.title,
-        amount: data.nutrition?.servingSize || null,
-        unit: data.nutrition?.servingSizeUnit || null,
-        expiration_date: null // not provided by Spoonacular, reserved for future sources
+        amount: data.nutrition && data.nutrition.servingSize || null,
+        unit: data.nutrition && data.nutrition.servingSizeUnit || null,
+        expiration_date: null // We'll leave this blank for the user to fill manually
       };
       res.json(result);
     } else {
@@ -257,6 +257,7 @@ app.get('/upc-lookup/:code', async (req, res) => {
     res.status(500).json({ message: 'Error fetching from Spoonacular' });
   }
 });
+
 
 
 // Start server
