@@ -232,6 +232,7 @@ app.get('/inventory/suggestions', authenticateJWT, (req, res) => {
 });
 
 // 📦 UPC Lookup (Expanded with amount, unit, and optional expiration)
+// 📦 UPC Lookup (with more debugging and fallback logic)
 app.get('/upc-lookup/:code', async (req, res) => {
   const upc = req.params.code;
   const apiKey = '51793868eaea480eab4b25e7482cd178';
@@ -241,12 +242,21 @@ app.get('/upc-lookup/:code', async (req, res) => {
     const response = await fetch(url);
     const data = await response.json();
 
+    console.log('📦 Spoonacular response:', data); // DEBUG: log full response
+
     if (response.ok && data.title) {
+      // Try extracting name, quantity (serving size), and unit
       const result = {
         title: data.title,
-        amount: data.nutrition && data.nutrition.servingSize || null,
-        unit: data.nutrition && data.nutrition.servingSizeUnit || null,
-        expiration_date: null // We'll leave this blank for the user to fill manually
+        amount:
+          (data.nutrition && data.nutrition.servingSize) ||
+          (data.serving_size) || // sometimes this field is outside nutrition
+          null,
+        unit:
+          (data.nutrition && data.nutrition.servingSizeUnit) ||
+          (data.serving_unit) ||
+          null,
+        expiration_date: null
       };
       res.json(result);
     } else {
@@ -257,6 +267,7 @@ app.get('/upc-lookup/:code', async (req, res) => {
     res.status(500).json({ message: 'Error fetching from Spoonacular' });
   }
 });
+
 
 
 
