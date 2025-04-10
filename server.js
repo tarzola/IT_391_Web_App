@@ -3,13 +3,14 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Client } = require('pg');
 const cors = require('cors');
+const fetch = require('node-fetch'); // ← Added for Spoonacular UPC lookup
 
 const app = express();
 const port = 3000;
 
 // === CORS Configuration ===
-app.use(cors()); // Open CORS to all origins for demo/dev
-app.use(express.json()); // Body parser for JSON
+app.use(cors());
+app.use(express.json());
 
 // === PostgreSQL Setup ===
 const client = new Client({
@@ -102,7 +103,7 @@ app.get('/inventory', authenticateJWT, (req, res) => {
   });
 });
 
-// Add inventory item (NOW INCLUDES UPC + UNIT)
+// Add inventory item
 app.post('/inventory', authenticateJWT, (req, res) => {
   const { name, quantity, unit, expiration_date, type, upc } = req.body;
 
@@ -124,7 +125,7 @@ app.post('/inventory', authenticateJWT, (req, res) => {
   );
 });
 
-// Use item (subtract quantity or delete)
+// Use item
 app.put('/inventory/:id/use', authenticateJWT, (req, res) => {
   const { id } = req.params;
   const { quantity } = req.body;
@@ -170,7 +171,7 @@ app.put('/inventory/:id/use', authenticateJWT, (req, res) => {
   });
 });
 
-// ✏️ Edit inventory item (NEW!)
+// ✏️ Edit inventory item
 app.put('/inventory/:id', authenticateJWT, async (req, res) => {
   const { id } = req.params;
   const { name, quantity, unit, expiration_date } = req.body;
@@ -230,7 +231,27 @@ app.get('/inventory/suggestions', authenticateJWT, (req, res) => {
   );
 });
 
-// Start the server
+// 📦 UPC Lookup (NEW!)
+app.get('/upc-lookup/:code', async (req, res) => {
+  const upc = req.params.code;
+  const apiKey = '51793868eaea480eab4b25e7482cd178';
+  const url = `https://api.spoonacular.com/food/products/upc/${upc}?apiKey=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (response.ok && data.title) {
+      res.json({ title: data.title });
+    } else {
+      res.status(404).json({ message: 'No product found' });
+    }
+  } catch (err) {
+    console.error('UPC lookup error:', err);
+    res.status(500).json({ message: 'Error fetching from Spoonacular' });
+  }
+});
+
+// Start server
 app.listen(port, '0.0.0.0', () => {
   console.log(`🚀 API server running at http://0.0.0.0:${port}`);
 });
