@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -51,10 +51,10 @@
       </select><br /><br />
 
       <label for="upc-code">UPC Code (Optional):</label>
-      <input type="text" id="upc-code" placeholder="Enter or scan UPC code" /><br /><br />
+      <input type="text" id="upc-code" placeholder="Enter or scan UPC code" /><br />
 
-      <!-- NEW: Suggested info -->
-      <div id="suggested-info" style="display: none; font-style: italic; margin-bottom: 20px;"></div>
+      <!-- 👀 Suggestions will show here -->
+      <div id="upc-preview" style="margin: 10px 0; font-style: italic; font-size: 0.95rem; color: #333;"></div><br />
 
       <p><strong>Or scan with your phone:</strong></p>
       <a class="btn" href="https://qrscanner.org/upc-to-url/?redirect=http://10.111.20.126/add-item.html?upc=" target="_blank">📷 Scan with Phone</a><br /><br />
@@ -87,36 +87,34 @@
       try {
         const response = await fetch(`http://10.111.20.126:3000/upc-lookup/${upc}`);
         const data = await response.json();
+        const preview = document.getElementById('upc-preview');
 
         if (response.ok && data.title) {
           document.getElementById('item-name').value = data.title;
-
           if (data.amount && !isNaN(data.amount)) {
             document.getElementById('item-quantity').value = data.amount;
           }
-
           if (data.unit && data.unit !== 'serving') {
             document.getElementById('item-unit').value = data.unit.toLowerCase();
           }
-
           if (data.expiration_date) {
             document.getElementById('item-expiration').value = data.expiration_date;
           }
 
-          // NEW: Display serving suggestion if available
-          const suggestionDiv = document.getElementById('suggested-info');
-          if (data.servings && data.servings.raw) {
-            suggestionDiv.innerText = `Suggested serving size: ${data.servings.raw}`;
-            suggestionDiv.style.display = 'block';
-          } else {
-            suggestionDiv.innerText = '';
-            suggestionDiv.style.display = 'none';
-          }
+          // Show preview suggestion box
+          preview.innerHTML = `
+            <strong>Suggestions from Spoonacular:</strong><br />
+            ${data.title ? `• Name: <em>${data.title}</em><br />` : ''}
+            ${data.amount ? `• Quantity: <em>${data.amount}</em><br />` : ''}
+            ${data.unit ? `• Unit: <em>${data.unit}</em><br />` : ''}
+            ${data.expiration_date ? `• Expiration: <em>${data.expiration_date}</em><br />` : ''}
+          `;
         } else {
-          console.warn('No product info returned for UPC:', upc);
+          preview.innerHTML = `<em>No product info found for this UPC.</em>`;
         }
       } catch (error) {
         console.error('Error fetching item info:', error);
+        document.getElementById('upc-preview').innerHTML = `<em>Could not fetch suggestions.</em>`;
       }
     }
 
@@ -151,7 +149,7 @@
           alert('Item added to inventory: ' + data.name);
           document.getElementById('add-item-form').reset();
           document.getElementById('scanned-code').textContent = 'None';
-          document.getElementById('suggested-info').style.display = 'none';
+          document.getElementById('upc-preview').innerHTML = '';
         } else {
           alert('Error adding item: ' + data.message);
         }
