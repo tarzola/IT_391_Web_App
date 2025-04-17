@@ -111,5 +111,49 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        if (response.ok) {
+          showMessage(data.message || 'User registered successfully');
+        } else {
+          showMessage(data.message || 'Registration failed', true);
+        }
+      } catch (error) {
+        showMessage('Error registering: ' + error.message, true);
+      }
+    });
 
+    // Handle Login
+    document.getElementById('login').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      if (document.getElementById('remember-me').checked) {
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          localStorage.setItem('token', data.token);
+          window.location.href = 'homepage.html';
+        } else {
+          showMessage(data.message || 'Login failed', true);
+        }
+      } catch (error) {
+        showMessage('Error logging in: ' + error.message, true);
+      }
+    });
+  </script>
+</body>
+</html>
 
