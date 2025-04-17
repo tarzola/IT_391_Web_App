@@ -10,6 +10,9 @@
   <div class="container">
     <h2>Login or Register</h2>
 
+    <!-- 🔔 Message box -->
+    <div id="message-box"></div>
+
     <!-- Register Form -->
     <div id="register-form" style="display: none;">
       <h3>Register</h3>
@@ -25,29 +28,28 @@
     </div>
 
     <!-- Login Form -->
-<div id="login-form">
-  <h3>Login</h3>
-  <form id="login">
-    <label>Email:</label>
-    <input type="email" id="login-email" required />
+    <div id="login-form">
+      <h3>Login</h3>
+      <form id="login">
+        <label>Email:</label>
+        <input type="email" id="login-email" required />
 
-    <label>Password:</label>
-    <input type="password" id="login-password" required />
+        <label>Password:</label>
+        <input type="password" id="login-password" required />
 
-    <div class="remember">
-      <input type="checkbox" id="remember-me" />
-      <label for="remember-me">Remember Me</label>
+        <div class="remember">
+          <input type="checkbox" id="remember-me" />
+          <label for="remember-me">Remember Me</label>
+        </div>
+
+        <button type="submit">Login</button>
+      </form>
+
+      <!-- 🔗 Forgot password link -->
+      <p style="margin-top: 10px; text-align: center;">
+        <a href="forgot-password.html">Forgot your password?</a>
+      </p>
     </div>
-
-    <button type="submit">Login</button>
-  </form>
-
-  <!-- 🔗 Forgot password link -->
-  <p style="margin-top: 10px; text-align: center;">
-    <a href="forgot-password.html">Forgot your password?</a>
-  </p>
-</div>
-
 
     <p>
       <button id="toggleForm">Don't have an account? Register</button>
@@ -56,6 +58,12 @@
 
   <script>
     const API_BASE = 'http://10.111.20.126:3000';
+
+    function showMessage(text, isError = false) {
+      const box = document.getElementById('message-box');
+      box.textContent = text;
+      box.className = isError ? 'error' : 'success';
+    }
 
     // Toggle between login and register
     document.getElementById('toggleForm').addEventListener('click', function () {
@@ -71,6 +79,8 @@
         registerForm.style.display = 'block';
         this.textContent = 'Already have an account? Login';
       }
+
+      document.getElementById('message-box').textContent = '';
     });
 
     // Load remembered email
@@ -96,53 +106,10 @@
       const email = document.getElementById('register-email').value;
       const password = document.getElementById('register-password').value;
 
-
       try {
         const response = await fetch(`${API_BASE}/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
-        });
-        const data = await response.json();
-        alert(data.message || 'User registered successfully');
-      } catch (error) {
-        alert('Error registering: ' + error.message);
-      }
-    });
 
-    // Handle Login
-    document.getElementById('login').addEventListener('submit', async function (event) {
-      event.preventDefault();
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
-
-
-      if (document.getElementById('remember-me').checked) {
-        localStorage.setItem('rememberedEmail', email);
-      } else {
-        localStorage.removeItem('rememberedEmail');
-      }
-
-      try {
-        const response = await fetch(`${API_BASE}/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          localStorage.setItem('token', data.token);
-          window.location.href = 'homepage.html'; // redirect after login
-        } else {
-          alert('Error: ' + data.message);
-        }
-      } catch (error) {
-        alert('Error logging in: ' + error.message);
-      }
-    });
-  </script>
-</body>
-</html>
 
