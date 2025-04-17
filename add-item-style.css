@@ -7,7 +7,7 @@ body {
 }
 
 header {
-    background-color: #33AD29; /* Green background */
+    background-color: #33AD29;
     padding: 20px;
     text-align: center;
     color: white;
@@ -90,11 +90,11 @@ form button {
 }
 
 form button:hover {
-    background-color: #268f1d; /* Darker green on hover */
+    background-color: #268f1d;
 }
 
 form button:active {
-    background-color: #1e6d15; /* Even darker green when button is clicked */
+    background-color: #1e6d15;
 }
 
 form .barcode-scan {
@@ -103,15 +103,36 @@ form .barcode-scan {
     color: #333;
 }
 
+/* UPC Preview Suggestions */
+#upc-preview {
+    background-color: #f2f2f2;
+    border-left: 4px solid #33AD29;
+    padding: 10px 12px;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+#upc-preview a {
+    color: #1b7e1b;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#upc-preview a:hover {
+    color: #145d14;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 600px) {
     section {
-        width: 90%; /* Reduce the form container size on smaller screens */
+        width: 90%;
         padding: 15px;
     }
 
     h2 {
-        font-size: 20px; /* Make the header smaller for mobile screens */
+        font-size: 20px;
     }
 
     form label,
@@ -119,17 +140,17 @@ form .barcode-scan {
     form input[type="number"],
     form input[type="date"],
     form select {
-        font-size: 14px; /* Adjust input sizes for better mobile compatibility */
+        font-size: 14px;
     }
 
     form button {
-        font-size: 14px; /* Adjust button size for mobile */
+        font-size: 14px;
         padding: 10px;
     }
 
     nav ul li {
         display: block;
-        margin-bottom: 10px; /* Stack navigation items on top of each other */
+        margin-bottom: 10px;
     }
 
     nav ul li a {
