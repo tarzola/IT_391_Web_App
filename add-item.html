@@ -29,7 +29,7 @@
       </select><br /><br />
 
       <!-- Scan with phone link right after type -->
-     <p><strong>Scan and enter a UPC below:</strong></p>
+      <p><strong>Scan and enter a UPC below:</strong></p>
       <a class="btn" href="https://qrscanner.org/upc-to-url/?redirect=http://10.111.20.126/add-item.html?upc=" target="_blank">📷 Scan with Phone</a><br /><br />
 
       <!-- UPC input right after scan link -->
@@ -73,8 +73,8 @@
 
   <script src="https://unpkg.com/html5-qrcode"></script>
   <script>
-    // Autofill expiration date based on pantry/fridge
-    document.getElementById('item-type').addEventListener('change', () => {
+    // Set expiration based on type
+    function setExpirationDate() {
       const type = document.getElementById('item-type').value;
       const exp = document.getElementById('item-expiration');
       const today = new Date();
@@ -84,14 +84,20 @@
         today.setDate(today.getDate() + 7);
       }
       exp.value = today.toISOString().split('T')[0];
-    });
-
-    const params = new URLSearchParams(window.location.search);
-    const upcFromUrl = params.get('upc');
-    if (upcFromUrl) {
-      document.getElementById('upc-code').value = upcFromUrl;
-      fetchDetailsFromUPC(upcFromUrl);
     }
+
+    document.getElementById('item-type').addEventListener('change', setExpirationDate);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setExpirationDate(); // set default expiration on load
+
+      const params = new URLSearchParams(window.location.search);
+      const upcFromUrl = params.get('upc');
+      if (upcFromUrl) {
+        document.getElementById('upc-code').value = upcFromUrl;
+        fetchDetailsFromUPC(upcFromUrl);
+      }
+    });
 
     document.getElementById('upc-code').addEventListener('blur', () => {
       const upc = document.getElementById('upc-code').value;
@@ -108,8 +114,8 @@
 
         if (response.ok && data.title) {
           document.getElementById('item-name').value = data.title;
-          document.getElementById('item-unit').value = 'oz'; // Default to ounces
-          
+          document.getElementById('item-unit').value = 'oz';
+
           if (data.amount && !isNaN(data.amount)) {
             document.getElementById('item-quantity').value = data.amount;
           }
@@ -122,7 +128,6 @@
             document.getElementById('item-expiration').value = data.expiration_date;
           }
 
-          // Add clickable suggested name
           preview.innerHTML = `
             <strong>Suggestions from Spoonacular:</strong><br />
             • Name: <a href="#" id="autofill-name" style="text-decoration: underline; color: green;">${data.title}</a><br />
@@ -176,6 +181,7 @@
           document.getElementById('add-item-form').reset();
           document.getElementById('scanned-code').textContent = 'None';
           document.getElementById('upc-preview').innerHTML = '';
+          setExpirationDate(); // Reset expiration on form reset
         } else {
           alert('Error adding item: ' + data.message);
         }
@@ -196,4 +202,3 @@
   </script>
 </body>
 </html>
-
