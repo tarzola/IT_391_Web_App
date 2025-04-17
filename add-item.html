@@ -21,6 +21,25 @@
   <section>
     <h2>Manual Entry</h2>
     <form id="add-item-form">
+      <!-- Pantry/Fridge Selector at top -->
+      <label for="item-type">Type:</label>
+      <select id="item-type" required>
+        <option value="pantry">Pantry</option>
+        <option value="fridge">Fridge</option>
+      </select><br /><br />
+
+      <!-- Scan with phone link right after type -->
+      <p><strong>Or scan with your phone:</strong></p>
+      <a class="btn" href="https://qrscanner.org/upc-to-url/?redirect=http://10.111.20.126/add-item.html?upc=" target="_blank">📷 Scan with Phone</a><br /><br />
+
+      <!-- UPC input right after scan link -->
+      <label for="upc-code">UPC Code (Optional):</label>
+      <input type="text" id="upc-code" placeholder="Enter or scan UPC code" /><br />
+
+      <!-- Suggestion preview -->
+      <div id="upc-preview" style="margin: 10px 0; font-style: italic; font-size: 0.95rem; color: #333;"></div><br />
+
+      <!-- Remaining inputs -->
       <label for="item-name">Item Name:</label>
       <input type="text" id="item-name" required /><br /><br />
 
@@ -44,21 +63,6 @@
       <label for="item-expiration">Expiration Date:</label>
       <input type="date" id="item-expiration" /><br /><br />
 
-      <label for="item-type">Type:</label>
-      <select id="item-type" required>
-        <option value="pantry">Pantry</option>
-        <option value="fridge">Fridge</option>
-      </select><br /><br />
-
-      <label for="upc-code">UPC Code (Optional):</label>
-      <input type="text" id="upc-code" placeholder="Enter or scan UPC code" /><br />
-
-      <!-- 👀 Suggestions will show here -->
-      <div id="upc-preview" style="margin: 10px 0; font-style: italic; font-size: 0.95rem; color: #333;"></div><br />
-
-      <p><strong>Or scan with your phone:</strong></p>
-      <a class="btn" href="https://qrscanner.org/upc-to-url/?redirect=http://10.111.20.126/add-item.html?upc=" target="_blank">📷 Scan with Phone</a><br /><br />
-
       <button type="submit">Add Item</button>
     </form>
 
@@ -69,6 +73,19 @@
 
   <script src="https://unpkg.com/html5-qrcode"></script>
   <script>
+    // Autofill expiration date based on pantry/fridge
+    document.getElementById('item-type').addEventListener('change', () => {
+      const type = document.getElementById('item-type').value;
+      const exp = document.getElementById('item-expiration');
+      const today = new Date();
+      if (type === 'pantry') {
+        today.setDate(today.getDate() + 30);
+      } else if (type === 'fridge') {
+        today.setDate(today.getDate() + 7);
+      }
+      exp.value = today.toISOString().split('T')[0];
+    });
+
     const params = new URLSearchParams(window.location.search);
     const upcFromUrl = params.get('upc');
     if (upcFromUrl) {
@@ -91,24 +108,33 @@
 
         if (response.ok && data.title) {
           document.getElementById('item-name').value = data.title;
+          document.getElementById('item-unit').value = 'oz'; // Default to ounces
+          
           if (data.amount && !isNaN(data.amount)) {
             document.getElementById('item-quantity').value = data.amount;
           }
+
           if (data.unit && data.unit !== 'serving') {
             document.getElementById('item-unit').value = data.unit.toLowerCase();
           }
+
           if (data.expiration_date) {
             document.getElementById('item-expiration').value = data.expiration_date;
           }
 
-          // Show preview suggestion box
+          // Add clickable suggested name
           preview.innerHTML = `
             <strong>Suggestions from Spoonacular:</strong><br />
-            ${data.title ? `• Name: <em>${data.title}</em><br />` : ''}
+            • Name: <a href="#" id="autofill-name" style="text-decoration: underline; color: green;">${data.title}</a><br />
             ${data.amount ? `• Quantity: <em>${data.amount}</em><br />` : ''}
             ${data.unit ? `• Unit: <em>${data.unit}</em><br />` : ''}
             ${data.expiration_date ? `• Expiration: <em>${data.expiration_date}</em><br />` : ''}
           `;
+
+          document.getElementById('autofill-name').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('item-name').value = data.title;
+          });
         } else {
           preview.innerHTML = `<em>No product info found for this UPC.</em>`;
         }
@@ -170,3 +196,4 @@
   </script>
 </body>
 </html>
+
