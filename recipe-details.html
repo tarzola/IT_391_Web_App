@@ -11,7 +11,7 @@
     <h1 id="recipe-title">Loading...</h1>
     <nav>
       <ul>
-        <li><a href="recipes.html">Back to Recipes</a></li>
+        <li><a id="back-link" style="color: white; font-weight: bold; cursor: pointer;">Back to Recipes</a></li>
       </ul>
     </nav>
   </header>
@@ -57,9 +57,16 @@
     }
 
     loadRecipeDetails();
+
+    // 🔄 Smart redirect based on login
+    document.getElementById('back-link').addEventListener('click', () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        window.location.href = 'recipes.html';
+      } else {
+        window.location.href = 'index.html';
+      }
+    });
   </script>
 </body>
 </html>
-
-
-
