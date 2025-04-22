@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Landing Page</title>
+  <link rel="stylesheet" href="landingPage_style.css">
+</head>
+
+<body>
+
+  <header>
+    <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
+  </header>
+
+  <div class="content">
+    <div class="main">
+      <h1>Home Pantry App</h1>
+      <p>Store all of your pantry and fridge items and check out our recipes!</p>
+    </div>
+  </div>
+
+  <div class="recommended">
+    <h2>Recommended Recipes</h2>
+    <div id="recipe-preview" class="item-list">
+      <!-- Recipes will load here -->
+    </div>
+  </div>
+
+  <script>
+    async function loadLandingRecipes() {
+      const fallbackIngredients = "tomato,cheese,lettuce,carrot";
+
+      try {
+        const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${fallbackIngredients}&number=3&apiKey=51793868eaea480eab4b25e7482cd178`);
+        const recipes = await response.json();
+
+        const container = document.getElementById('recipe-preview');
+        container.innerHTML = '';
+
+        for (const recipe of recipes) {
+          const card = document.createElement('div');
+          card.className = 'item';
+          card.innerHTML = `
+            <img src="${recipe.image}" alt="${recipe.title}" />
+            <h3>${recipe.title}</h3>
+            <a href="recipe-details.html?id=${recipe.id}">View Recipe</a>
+          `;
+          container.appendChild(card);
+        }
+      } catch (err) {
+        console.error("Error loading landing recipes:", err);
+        document.getElementById('recipe-preview').innerHTML = `<p>Could not load recipes right now.</p>`;
+      }
+    }
+
+    loadLandingRecipes();
+  </script>
+
+</body>
+</html>
+
+
+</body>
+
+</html>
