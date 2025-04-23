@@ -61,9 +61,9 @@
               <img src="${recipe.image}" alt="${recipe.title}">
             </a>
             <div class="rating-buttons">
-              <button class="btn-red" onclick="saveRecipe(${recipe.id}, '${recipe.title}', '${recipe.image}', 'red')">❤️ Red</button>
-              <button class="btn-yellow" onclick="saveRecipe(${recipe.id}, '${recipe.title}', '${recipe.image}', 'yellow')">💛 Yellow</button>
-              <button class="btn-green" onclick="saveRecipe(${recipe.id}, '${recipe.title}', '${recipe.image}', 'green')">💚 Green</button>
+              <button class="btn-red" onclick="saveRecipe(${recipe.id}, '${recipe.title.replace(/'/g, "\\'")}', '${recipe.image}', 'red')">❤️ Red</button>
+              <button class="btn-yellow" onclick="saveRecipe(${recipe.id}, '${recipe.title.replace(/'/g, "\\'")}', '${recipe.image}', 'yellow')">💛 Yellow</button>
+              <button class="btn-green" onclick="saveRecipe(${recipe.id}, '${recipe.title.replace(/'/g, "\\'")}', '${recipe.image}', 'green')">💚 Green</button>
             </div>
           `;
           container.appendChild(card);
@@ -82,7 +82,12 @@
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({ spoonacular_id: id, title, image, rating })
+          body: JSON.stringify({
+            recipe_id: id,
+            title,
+            image_url: image,
+            rating
+          })
         });
 
         const data = await res.json();
@@ -100,4 +105,3 @@
   </script>
 </body>
 </html>
-
