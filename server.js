@@ -268,7 +268,80 @@ app.get('/upc-lookup/:code', async (req, res) => {
   }
 });
 
+app.post('/saved-recipes', authenticateJWT, async (req, res) => {
+  const { recipe_id, title, image_url, rating } = req.body;
 
+  try {
+    const result = await client.query(
+      `INSERT INTO saved_recipes (user_id, recipe_id, title, image_url, rating)
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (user_id, recipe_id)
+       DO UPDATE SET rating = EXCLUDED.rating
+       RETURNING *`,
+      [req.user.id, recipe_id, title, image_url, rating]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error saving recipe:', err);
+    res.status(500).json({ message: 'Failed to save recipe' });
+  }
+});
+
+app.get('/saved-recipes', authenticateJWT, async (req, res) => {
+  try {
+    const result = await client.query(
+      'SELECT * FROM saved_recipes WHERE user_id = $1',
+      [req.user.id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching saved recipes:', err);
+    res.status(500).json({ message: 'Failed to fetch saved recipes' });
+  }
+});
+
+app.put('/saved-recipes/:recipeId', authenticateJWT, async (req, res) => {
+  const { recipeId } = req.params;
+  const { rating } = req.body;
+
+  try {
+    const result = await client.query(
+      `UPDATE saved_recipes SET rating = $1
+       WHERE user_id = $2 AND recipe_id = $3
+       RETURNING *`,
+      [rating, req.user.id, recipeId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating recipe rating:', err);
+    res.status(500).json({ message: 'Failed to update rating' });
+  }
+});
+
+app.delete('/saved-recipes/:recipeId', authenticateJWT, async (req, res) => {
+  const { recipeId } = req.params;
+
+  try {
+    const result = await client.query(
+      'DELETE FROM saved_recipes WHERE user_id = $1 AND recipe_id = $2 RETURNING *',
+      [req.user.id, recipeId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    res.json({ message: 'Recipe deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting recipe:', err);
+    res.status(500).json({ message: 'Failed to delete recipe' });
+  }
+});
 
 
 // Start server
