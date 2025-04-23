@@ -275,14 +275,17 @@ app.post('/api/saved-recipes', authenticateJWT, async (req, res) => {
   const { recipe_id, title, image_url, rating } = req.body;
 
   try {
-    const result = await client.query(
-      `INSERT INTO saved_recipes (user_id, recipe_id, title, image_url, rating)
-       VALUES ($1, $2, $3, $4, $5)
-       ON CONFLICT (user_id, recipe_id)
-       DO UPDATE SET rating = EXCLUDED.rating
-       RETURNING *`,
-      [req.user.id, recipe_id, title, image_url, rating]
-    );
+    const { recipe_id, recipe_title, recipe_image, rating } = req.body;
+
+const result = await client.query(
+  `INSERT INTO saved_recipes (user_id, recipe_id, recipe_title, recipe_image, rating)
+   VALUES ($1, $2, $3, $4, $5)
+   ON CONFLICT (user_id, recipe_id)
+   DO UPDATE SET rating = EXCLUDED.rating
+   RETURNING *`,
+  [req.user.id, recipe_id, recipe_title, recipe_image, rating]
+);
+
     res.json(result.rows[0]);
   } catch (err) {
     console.error('Error saving recipe:', err);
