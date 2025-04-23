@@ -6,12 +6,40 @@
   <title>Recipe Suggestions</title>
   <link rel="stylesheet" href="recipe-style.css" />
   <style>
-    /* Optional scrollable instructions area */
     .instructions {
       max-height: 300px;
       overflow-y: auto;
       padding-right: 5px;
     }
+    .recipe-card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 20px 0;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+    }
+    .recipe-card img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    .rating-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .rating-buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-red { background-color: #e74c3c; }
+    .btn-yellow { background-color: #f1c40f; }
+    .btn-green { background-color: #2ecc71; }
   </style>
 </head>
 <body>
@@ -35,57 +63,71 @@
 
   <script>
     async function loadRecipes() {
-      const token = localStorage.getItem('token'); // Get the token from localStorage
-
+      const token = localStorage.getItem('token');
       if (!token) {
         alert('Please log in to see recipe suggestions');
         return;
       }
 
       try {
-        // Fetch the user's inventory
         const inventoryResponse = await fetch('http://10.111.20.126:3000/inventory', {
-          headers: {
-            'Authorization': `Bearer ${token}`, // Send token with the request
-          },
+          headers: { 'Authorization': `Bearer ${token}` },
         });
         const inventory = await inventoryResponse.json();
+        let ingredients = inventory.map(item => item.name).join(',') || 'tomato,cheese,lettuce';
 
-        let ingredients = inventory.map(item => item.name).join(',');
-
-        // If no ingredients, fetch some generic recipes
-        if (ingredients.length === 0) {
-          ingredients = 'tomato,cheese,lettuce,carrot'; // Example generic ingredients
-        }
-
-        // Fetch recipes based on the user's inventory (or fallback to generic)
-        const recipeResponse = await fetch(
-          `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=51793868eaea480eab4b25e7482cd178`
-        );
+        const recipeResponse = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=51793868eaea480eab4b25e7482cd178`);
         const recipes = await recipeResponse.json();
 
-        const recipeListDiv = document.getElementById('recipe-list');
-        recipeListDiv.innerHTML = ''; // Clear previous recipes
+        const container = document.getElementById('recipe-list');
+        container.innerHTML = '';
 
-        // If no recipes found, show a message
         if (recipes.length === 0) {
-          recipeListDiv.innerHTML = '<p>No recipes found for your ingredients.</p>';
+          container.innerHTML = '<p>No recipes found for your ingredients.</p>';
+          return;
         }
 
-        // Display recipes
         for (const recipe of recipes) {
-          const div = document.createElement('div');
-          div.innerHTML = `
+          const card = document.createElement('div');
+          card.className = 'recipe-card';
+          card.innerHTML = `
             <a href="recipe-details.html?id=${recipe.id}" style="text-decoration: none; color: inherit;">
               <h3>${recipe.title}</h3>
               <img src="${recipe.image}" alt="${recipe.title}">
-              <p>${recipe.title}</p>
             </a>
+            <div class="rating-buttons">
+              <button class="btn-red" onclick="saveRecipe(${recipe.id}, '${recipe.title}', '${recipe.image}', 'red')">❤️ Red</button>
+              <button class="btn-yellow" onclick="saveRecipe(${recipe.id}, '${recipe.title}', '${recipe.image}', 'yellow')">💛 Yellow</button>
+              <button class="btn-green" onclick="saveRecipe(${recipe.id}, '${recipe.title}', '${recipe.image}', 'green')">💚 Green</button>
+            </div>
           `;
-          recipeListDiv.appendChild(div);
+          container.appendChild(card);
         }
       } catch (error) {
         console.error('Error loading recipes:', error);
+      }
+    }
+
+    async function saveRecipe(id, title, image, rating) {
+      const token = localStorage.getItem('token');
+      try {
+        const res = await fetch('http://10.111.20.126:3000/saved-recipes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ spoonacular_id: id, title, image, rating })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert(`Recipe saved with rating: ${rating.toUpperCase()}`);
+        } else {
+          alert(data.message || 'Failed to save recipe');
+        }
+      } catch (err) {
+        alert('Error saving recipe: ' + err.message);
       }
     }
 
@@ -93,5 +135,4 @@
   </script>
 </body>
 </html>
-
 
