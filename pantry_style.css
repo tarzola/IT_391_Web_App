@@ -1,78 +1,6 @@
-/* ========== RESET & BASE STYLES ========== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* ========== PANTRY PAGE ONLY ========== */
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  padding-top: 130px; /* Header (70px) + Sort Bar (60px) */
-}
-
-/* ========== HEADER ========== */
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
-  background: #33AD29;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-}
-
-header h1 {
-  font-size: 22px;
-}
-
-/* ========== NAVIGATION ========== */
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 12px;
-}
-
-nav ul li a {
-  text-decoration: none;
-  color: white;
-  background: #2a8e24;
-  padding: 8px 15px;
-  border-radius: 5px;
-  font-weight: bold;
-  display: inline-block;
-}
-
-nav ul li a:hover {
-  background: #1f6e1c;
-}
-
-/* ========== LOGOUT BUTTON ========== */
-#logout-btn {
-  background: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-#logout-btn:hover {
-  background: #cc0000;
-}
-
-/* ========== SORT BAR ========== */
+/* Sort Bar */
 .sort-controls {
   position: fixed;
   top: 70px;
@@ -98,12 +26,12 @@ nav ul li a:hover {
   border-radius: 4px;
   border: 1px solid #ccc;
   background-color: #fff;
-  appearance: none; /* cross-browser */
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
-/* ========== CONTAINERS ========== */
+/* Layout Containers */
 .section-container {
   width: 90%;
   max-width: 1000px;
@@ -120,7 +48,7 @@ nav ul li a:hover {
   gap: 20px;
 }
 
-/* ========== INVENTORY CARD ========== */
+/* Inventory Cards */
 .inventory-card {
   background: #ffffff;
   padding: 15px 20px;
@@ -152,7 +80,7 @@ nav ul li a:hover {
   font-weight: bold;
 }
 
-/* ========== ACTION BUTTONS ========== */
+/* Action Buttons */
 .action-buttons {
   display: flex;
   gap: 10px;
@@ -191,7 +119,7 @@ nav ul li a:hover {
   background-color: #c82333;
 }
 
-/* ========== MOBILE STYLES ========== */
+/* Mobile Layout */
 @media (max-width: 768px) {
   .inventory-card {
     width: 100%;
