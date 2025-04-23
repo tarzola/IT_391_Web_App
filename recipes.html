@@ -83,11 +83,12 @@
             'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
-            recipe_id: id,
-            title,
-            image_url: image,
-            rating
-          })
+  recipe_id: id,
+  recipe_title: title,
+  recipe_image: image,
+  rating
+})
+
         });
 
         const data = await res.json();
