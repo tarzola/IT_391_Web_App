@@ -76,7 +76,7 @@
     async function saveRecipe(id, title, image, rating) {
       const token = localStorage.getItem('token');
       try {
-        const res = await fetch('http://10.111.20.126:3000/saved-recipes', {
+        const res = await fetch('http://10.111.20.126:3000/api/saved-recipes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -105,3 +105,4 @@
   </script>
 </body>
 </html>
+
