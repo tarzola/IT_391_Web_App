@@ -1,106 +1,53 @@
-/* Base layout */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
+/* === Login Page Specific Styling === */
 
-/* Container box */
 .container {
-  background-color: white;
-  border: 3px solid #33ad29;
-  border-radius: 12px;
   max-width: 400px;
   width: 90%;
   padding: 35px 30px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-/* Headings */
 h2, h3 {
-  text-align: center;
-  color: #33ad29;
   margin-bottom: 10px;
 }
 
-/* Forms */
 form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-/* Labels */
 label {
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #333;
-  text-align: left;
   font-size: 14px;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 5px;
 }
 
-/* Inputs */
 input[type="email"],
 input[type="password"] {
   padding: 12px;
-  border: 2px solid #33ad29;
   border-radius: 8px;
   font-size: 1rem;
 }
 
-/* Button styles */
-button {
-  padding: 12px;
-  background-color: #33ad29;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #2e8b25;
-}
-
-/* Toggle button for switching forms */
 #toggleForm {
   margin-top: 20px;
-  background-color: transparent;
-  color: #33ad29;
-  border: none;
   font-size: 0.95rem;
-  cursor: pointer;
   text-decoration: underline;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
-/* Remember me row */
 .remember {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 15px;
   font-size: 14px;
-  color: #333;
 }
 
-/* Responsive tweaks */
-@media (max-width: 500px) {
-  .container {
-    width: 90%;
-    padding: 25px;
-  }
-}
-
-/* Message Box Styles */
 #message-box {
   text-align: center;
   padding: 10px 15px;
@@ -120,5 +67,11 @@ button:hover {
   color: #721c24;
   background-color: #f8d7da;
   border: 1px solid #f5c6cb;
+}
+
+@media (max-width: 500px) {
+  .container {
+    padding: 25px;
+  }
 }
 
