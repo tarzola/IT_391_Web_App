@@ -33,7 +33,7 @@
       }
 
       try {
-        const response = await fetch('http://10.111.20.126:3000/saved-recipes', {
+        const response = await fetch('http://10.111.20.126:3000/api/saved-recipes', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -52,7 +52,7 @@
           card.classList.add('recipe-card');
 
           card.innerHTML = `
-            <img src="${recipe.image}" alt="${recipe.title}" />
+            <img src="${recipe.image_url}" alt="${recipe.title}" />
             <div class="recipe-content">
               <h2>${recipe.title}</h2>
               <span class="badge ${recipe.rating}">${recipe.rating}</span>
@@ -73,7 +73,7 @@
     async function removeRecipe(recipeId) {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch(`http://10.111.20.126:3000/saved-recipes/${recipeId}`, {
+        const response = await fetch(`http://10.111.20.126:3000/api/saved-recipes/${recipeId}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`
@@ -95,3 +95,4 @@
   </script>
 </body>
 </html>
+
