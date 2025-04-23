@@ -268,7 +268,10 @@ app.get('/upc-lookup/:code', async (req, res) => {
   }
 });
 
-app.post('/saved-recipes', authenticateJWT, async (req, res) => {
+
+// 🔄 UPDATED saved-recipes endpoints with /api prefix
+
+app.post('/api/saved-recipes', authenticateJWT, async (req, res) => {
   const { recipe_id, title, image_url, rating } = req.body;
 
   try {
@@ -287,7 +290,7 @@ app.post('/saved-recipes', authenticateJWT, async (req, res) => {
   }
 });
 
-app.get('/saved-recipes', authenticateJWT, async (req, res) => {
+app.get('/api/saved-recipes', authenticateJWT, async (req, res) => {
   try {
     const result = await client.query(
       'SELECT * FROM saved_recipes WHERE user_id = $1',
@@ -300,7 +303,7 @@ app.get('/saved-recipes', authenticateJWT, async (req, res) => {
   }
 });
 
-app.put('/saved-recipes/:recipeId', authenticateJWT, async (req, res) => {
+app.put('/api/saved-recipes/:recipeId', authenticateJWT, async (req, res) => {
   const { recipeId } = req.params;
   const { rating } = req.body;
 
@@ -323,7 +326,7 @@ app.put('/saved-recipes/:recipeId', authenticateJWT, async (req, res) => {
   }
 });
 
-app.delete('/saved-recipes/:recipeId', authenticateJWT, async (req, res) => {
+app.delete('/api/saved-recipes/:recipeId', authenticateJWT, async (req, res) => {
   const { recipeId } = req.params;
 
   try {
