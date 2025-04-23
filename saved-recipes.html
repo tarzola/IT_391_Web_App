@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Saved Recipes</title>
+  <link rel="stylesheet" href="saved-recipes-style.css" />
+</head>
+<body>
+  <header>
+    <h1>Saved Recipes</h1>
+    <nav>
+      <ul>
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="recipes.html">Recipes</a></li>
+        <li><a href="pantry.html">Pantry</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="recipes-container">
+      <!-- Saved recipes will appear here -->
+    </section>
+  </main>
+
+  <script>
+    async function loadSavedRecipes() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please log in to view saved recipes');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://10.111.20.126:3000/saved-recipes', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        const recipes = await response.json();
+        const container = document.getElementById('recipes-container');
+
+        if (!Array.isArray(recipes) || recipes.length === 0) {
+          container.innerHTML = '<p>No saved recipes yet.</p>';
+          return;
+        }
+
+        recipes.forEach(recipe => {
+          const card = document.createElement('div');
+          card.classList.add('recipe-card');
+
+          card.innerHTML = `
+            <img src="${recipe.image}" alt="${recipe.title}" />
+            <div class="recipe-content">
+              <h2>${recipe.title}</h2>
+              <span class="badge ${recipe.rating}">${recipe.rating}</span>
+              <div class="actions">
+                <a href="recipe-details.html?id=${recipe.recipe_id}" class="view-link">View Recipe</a>
+                <button onclick="removeRecipe(${recipe.recipe_id})">Remove</button>
+              </div>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Error loading saved recipes:', error);
+      }
+    }
+
+    async function removeRecipe(recipeId) {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`http://10.111.20.126:3000/saved-recipes/${recipeId}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          alert('Recipe removed');
+          location.reload();
+        } else {
+          alert('Failed to remove recipe');
+        }
+      } catch (error) {
+        console.error('Error removing recipe:', error);
+      }
+    }
+
+    loadSavedRecipes();
+  </script>
+</body>
+</html>
