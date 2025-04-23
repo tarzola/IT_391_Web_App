@@ -1,126 +1,64 @@
-/* === Global Reset === */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* ===== Homepage Specific Styles ===== */
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0fff4;
-    color: #333;
-}
-
-/* === Header & Navigation === */
-header {
-    background-color: #2e8b57; /* Sea green */
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-
-nav ul {
-    display: flex;
-    justify-content: center;
-    list-style-type: none;
-    background-color: #3cb371; /* Medium sea green */
-    padding: 12px 0;
-}
-
-nav ul li {
-    margin: 0 20px;
-}
-
-nav ul li a,
-.logout-btn {
-    text-decoration: none;
-    color: white;
-    background-color: #228b22; /* Forest green */
-    padding: 10px 18px;
-    border-radius: 6px;
-    font-weight: bold;
-    transition: background 0.3s;
-    display: inline-block;
-}
-
-nav ul li a:hover,
-.logout-btn:hover {
-    background-color: #006400; /* Darker green */
-}
-
-.logout-btn {
-    background-color: red;
-    border: none;
-    cursor: pointer;
-}
-
-/* === Section Content === */
+/* Welcome Section */
 section {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 20px;
-    text-align: center;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  text-align: center;
 }
 
 section h2 {
-    font-size: 28px;
-    margin-bottom: 10px;
+  font-size: 28px;
+  margin-bottom: 10px;
 }
 
 section p {
-    font-size: 16px;
-    margin-bottom: 30px;
+  font-size: 16px;
+  margin-bottom: 30px;
 }
 
-/* === Summary Box === */
+/* Inventory Summary Box */
 .summary {
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 100, 0, 0.2);
-    padding: 20px;
-    margin-bottom: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 100, 0, 0.2);
+  padding: 20px;
+  margin-bottom: 30px;
 }
 
 .summary p {
-    font-size: 18px;
-    margin: 10px 0;
-    color: #2e8b57;
+  font-size: 18px;
+  margin: 10px 0;
+  color: #2e8b57;
 }
 
-/* === Quick Actions === */
+/* Buttons for Quick Actions */
 .quick-actions {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .btn {
-    padding: 12px 25px;
-    background-color: #32cd32; /* Lime green */
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-size: 16px;
-    transition: background 0.3s;
+  padding: 12px 25px;
+  background-color: #32cd32;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: background 0.3s;
 }
 
 .btn:hover {
-    background-color: #228b22;
+  background-color: #228b22;
 }
 
-/* === Responsive Design === */
+/* Responsive Adjustments */
 @media (max-width: 600px) {
-    nav ul {
-        flex-direction: column;
-    }
-
-    nav ul li {
-        margin: 10px 0;
-    }
-
-    .quick-actions {
-        flex-direction: column;
-        gap: 15px;
-    }
+  .quick-actions {
+    flex-direction: column;
+    gap: 15px;
+  }
 }
