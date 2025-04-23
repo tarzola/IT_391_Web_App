@@ -52,16 +52,17 @@
           card.classList.add('recipe-card');
 
           card.innerHTML = `
-            <img src="${recipe.image_url}" alt="${recipe.title}" />
-            <div class="recipe-content">
-              <h2>${recipe.title}</h2>
-              <span class="badge ${recipe.rating}">${recipe.rating}</span>
-              <div class="actions">
-                <a href="recipe-details.html?id=${recipe.recipe_id}" class="view-link">View Recipe</a>
-                <button onclick="removeRecipe(${recipe.recipe_id})">Remove</button>
-              </div>
-            </div>
-          `;
+  <img src="${recipe.recipe_image}" alt="${recipe.recipe_title}" />
+  <div class="recipe-content">
+    <h2>${recipe.recipe_title}</h2>
+    <span class="badge ${recipe.rating}">${recipe.rating}</span>
+    <div class="actions">
+      <a href="recipe-details.html?id=${recipe.recipe_id}" class="view-link">View Recipe</a>
+      <button onclick="removeRecipe(${recipe.recipe_id})">Remove</button>
+    </div>
+  </div>
+`;
+
 
           container.appendChild(card);
         });
