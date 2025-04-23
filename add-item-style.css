@@ -1,160 +1,78 @@
-/* General Styles for the Form Page */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
+/* ===== Add Item Page Specific Styles ===== */
 
-header {
-    background-color: #33AD29;
-    padding: 20px;
-    text-align: center;
-    color: white;
-}
-
-h1 {
-    margin: 0;
-    font-size: 28px;
-}
-
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-}
-
-nav ul li a:hover {
-    text-decoration: underline;
-}
-
+/* Center the form section nicely */
 section {
-    padding: 20px;
-    background-color: white;
-    margin: 20px auto;
-    width: 80%;
-    max-width: 600px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  background-color: white;
+  margin: 20px auto;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Page heading */
 h2 {
-    font-size: 22px;
-    color: #33AD29;
-    text-align: center;
-    margin-bottom: 20px;
+  font-size: 22px;
+  color: #33AD29;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
+/* Form layout */
 form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-form label {
-    font-size: 16px;
-    color: #333;
+.barcode-scan {
+  text-align: center;
+  font-size: 16px;
+  color: #333;
 }
 
-form input[type="text"],
-form input[type="number"],
-form input[type="date"],
-form select {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-}
-
-form button {
-    padding: 12px;
-    background-color: #33AD29;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s;
-}
-
-form button:hover {
-    background-color: #268f1d;
-}
-
-form button:active {
-    background-color: #1e6d15;
-}
-
-form .barcode-scan {
-    text-align: center;
-    font-size: 16px;
-    color: #333;
-}
-
-/* UPC Preview Suggestions */
+/* UPC preview box */
 #upc-preview {
-    background-color: #f2f2f2;
-    border-left: 4px solid #33AD29;
-    padding: 10px 12px;
-    border-radius: 5px;
-    font-size: 0.95rem;
-    color: #333;
+  background-color: #f2f2f2;
+  border-left: 4px solid #33AD29;
+  padding: 10px 12px;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  color: #333;
 }
 
 #upc-preview a {
-    color: #1b7e1b;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: underline;
+  color: #1b7e1b;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 #upc-preview a:hover {
-    color: #145d14;
+  color: #145d14;
 }
 
-/* Mobile Responsiveness */
+/* Mobile Adjustments */
 @media (max-width: 600px) {
-    section {
-        width: 90%;
-        padding: 15px;
-    }
+  section {
+    width: 90%;
+    padding: 15px;
+  }
 
-    h2 {
-        font-size: 20px;
-    }
+  h2 {
+    font-size: 20px;
+  }
 
-    form label,
-    form input[type="text"],
-    form input[type="number"],
-    form input[type="date"],
-    form select {
-        font-size: 14px;
-    }
+  form label,
+  form input,
+  form select {
+    font-size: 14px;
+  }
 
-    form button {
-        font-size: 14px;
-        padding: 10px;
-    }
-
-    nav ul li {
-        display: block;
-        margin-bottom: 10px;
-    }
-
-    nav ul li a {
-        font-size: 14px;
-    }
+  form button {
+    font-size: 14px;
+    padding: 10px;
+  }
 }
 
