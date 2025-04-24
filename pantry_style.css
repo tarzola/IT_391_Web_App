@@ -1,47 +1,33 @@
 /* ========== PANTRY PAGE ONLY ========== */
 
-/* Header Styling */
+/* Reset top spacing */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Header matches homepage */
 header {
   background-color: #32a852;
   color: white;
-  padding: 20px 20px 10px;
+  padding: 20px 0;
   text-align: center;
 }
 
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.header-top h1 {
+header h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 2.5rem;
 }
 
-#logout-btn {
-  background-color: white;
-  color: #32a852;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-#logout-btn:hover {
-  background-color: #dff0e0;
-}
-
+/* Navigation under the title, centered */
 nav ul {
   list-style: none;
   padding: 0;
-  margin: 10px 0 0 0;
+  margin: 10px 0 0;
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
   gap: 15px;
 }
 
@@ -58,26 +44,36 @@ nav ul li a:hover {
   background-color: #289647;
 }
 
-/* Adjust body spacing to account for header + sort bar */
-body {
-  padding-top: 100px;
-  background-color: #f9f9f9;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* Logout button matches homepage */
+#logout-btn {
+  margin-top: 15px;
+  background-color: white;
+  color: #32a852;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-/* Sort Bar */
+#logout-btn:hover {
+  background-color: #dff0e0;
+}
+
+/* Sort Bar (not fixed anymore) */
 .sort-controls {
-  position: relative; /* ⬅️ changed from fixed to relative */
-  margin: 20px auto;
+  width: 90%;
   max-width: 1000px;
-  padding: 15px 25px;
+  margin: 30px auto;
   background: #e8f5e9;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 15px 25px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }
 
 .sort-controls label {
@@ -90,9 +86,6 @@ body {
   border-radius: 4px;
   border: 1px solid #ccc;
   background-color: #fff;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 
 /* Layout Containers */
@@ -183,14 +176,8 @@ body {
   background-color: #c82333;
 }
 
-/* Responsive Adjustments */
+/* Mobile Friendly */
 @media (max-width: 768px) {
-  .header-top {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
   .inventory-card {
     width: 100%;
     flex-direction: column;
