@@ -1,14 +1,32 @@
-/* === Login Page Specific Styling === */
+/* === Login Page Styling (Unified with App Theme) === */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
 
 .container {
+  background-color: white;
+  border: 3px solid #33ad29;
+  border-radius: 12px;
   max-width: 400px;
   width: 90%;
   padding: 35px 30px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
 h2, h3 {
+  text-align: center;
+  color: #333;
   margin-bottom: 10px;
+  font-weight: bold;
 }
 
 form {
@@ -22,22 +40,48 @@ label {
   font-weight: bold;
   text-align: left;
   margin-bottom: 5px;
+  color: #333;
 }
 
 input[type="email"],
 input[type="password"] {
   padding: 12px;
+  border: 2px solid #33ad29;
   border-radius: 8px;
   font-size: 1rem;
+  outline: none;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #2e8b25;
+  box-shadow: 0 0 5px #33ad29;
+}
+
+button {
+  padding: 12px;
+  background-color: #33ad29;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2e8b25;
 }
 
 #toggleForm {
   margin-top: 20px;
-  font-size: 0.95rem;
-  text-decoration: underline;
-  background: transparent;
+  background-color: transparent;
+  color: #33ad29;
   border: none;
+  font-size: 0.95rem;
   cursor: pointer;
+  text-decoration: underline;
 }
 
 .remember {
@@ -46,6 +90,7 @@ input[type="password"] {
   gap: 10px;
   margin-bottom: 15px;
   font-size: 14px;
+  color: #333;
 }
 
 #message-box {
@@ -71,6 +116,7 @@ input[type="password"] {
 
 @media (max-width: 500px) {
   .container {
+    width: 90%;
     padding: 25px;
   }
 }
