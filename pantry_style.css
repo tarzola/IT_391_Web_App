@@ -60,25 +60,24 @@ nav ul li a:hover {
 
 /* Adjust body spacing to account for header + sort bar */
 body {
-  padding-top: 180px;
+  padding-top: 100px;
   background-color: #f9f9f9;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Sort Bar */
 .sort-controls {
-  position: fixed;
-  top: 120px;
-  left: 0;
-  width: 100%;
-  background: #e8f5e9;
+  position: relative; /* ⬅️ changed from fixed to relative */
+  margin: 20px auto;
+  max-width: 1000px;
   padding: 15px 25px;
-  z-index: 999;
+  background: #e8f5e9;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
-  border-bottom: 1px solid #ccc;
 }
 
 .sort-controls label {
