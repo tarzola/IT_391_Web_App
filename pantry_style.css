@@ -1,5 +1,57 @@
 /* ========== PANTRY PAGE ONLY ========== */
 
+/* Header Styling */
+header {
+  background-color: #32a852;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background 0.2s ease;
+}
+
+nav ul li a:hover {
+  background-color: #289647;
+}
+
+#logout-btn {
+  margin-top: 10px;
+  background-color: white;
+  color: #32a852;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#logout-btn:hover {
+  background-color: #dff0e0;
+}
+
 /* Adjust body spacing to account for global header height */
 body {
   padding-top: 160px; /* ~100px for header + nav + spacing */
@@ -146,3 +198,4 @@ body {
     gap: 8px;
   }
 }
+
