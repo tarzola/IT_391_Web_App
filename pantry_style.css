@@ -25,9 +25,11 @@ header h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 0 20px;
-  flex-wrap: wrap;
 }
+
 
 .header-top h1 {
   margin: 0;
