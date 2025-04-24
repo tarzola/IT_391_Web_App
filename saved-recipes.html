@@ -48,32 +48,37 @@
           return;
         }
 
-        recipes.forEach(recipe => {
-          const encodedTitle = encodeURIComponent(`Check out this recipe: ${recipe.recipe_title}`);
-          const encodedUrl = encodeURIComponent(`http://10.111.20.126:3000/recipe-details.html?id=${recipe.recipe_id}`);
-          const twitterLink = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+        recipes.forEach(async recipe => {
+  try {
+    const spoonacularResponse = await fetch(`https://api.spoonacular.com/recipes/${recipe.recipe_id}/information?apiKey=51793868eaea480eab4b25e7482cd178`);
+    const data = await spoonacularResponse.json();
 
-          const card = document.createElement('div');
-          card.classList.add('recipe-card');
+    const encodedText = encodeURIComponent(`Check out this recipe: ${recipe.recipe_title} from What's Cooking!`);
+    const encodedUrl = encodeURIComponent(data.spoonacularSourceUrl || `http://10.111.20.126:3000/recipe-details.html?id=${recipe.recipe_id}`);
+    const twitterLink = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
 
-          card.innerHTML = `
-            <img src="${recipe.recipe_image}" alt="${recipe.recipe_title}" />
-            <div class="recipe-content">
-              <h2>${recipe.recipe_title}</h2>
-              <span class="badge ${recipe.rating}">${recipe.rating}</span>
-              <div class="actions">
-                <a href="recipe-details.html?id=${recipe.recipe_id}" class="view-link">View Recipe</a>
-                <button onclick="removeRecipe(${recipe.recipe_id})">Remove</button>
-                <a href="${twitterLink}" class="share-btn" target="_blank">Share</a>
-              </div>
-            </div>
-          `;
+    const card = document.createElement('div');
+    card.classList.add('recipe-card');
 
-          container.appendChild(card);
-        });
-      } catch (error) {
-        console.error('Error loading saved recipes:', error);
-      }
+    card.innerHTML = `
+      <img src="${recipe.recipe_image}" alt="${recipe.recipe_title}" />
+      <div class="recipe-content">
+        <h2>${recipe.recipe_title}</h2>
+        <span class="badge ${recipe.rating}">${recipe.rating}</span>
+        <div class="actions">
+          <a href="recipe-details.html?id=${recipe.recipe_id}" class="view-link">View</a>
+          <button onclick="removeRecipe(${recipe.recipe_id})">Remove</button>
+          <a href="${twitterLink}" class="share-btn" target="_blank">Share</a>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  } catch (err) {
+    console.error('Error getting Spoonacular info for sharing:', err);
+  }
+});
+
     }
 
     async function removeRecipe(recipeId) {
