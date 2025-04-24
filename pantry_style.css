@@ -8,41 +8,36 @@ body {
   background-color: #f9f9f9;
 }
 
-/* Header matches homepage */
+/* Header matches homepage layout */
 header {
   background-color: #32a852;
   color: white;
-  padding: 20px 0;
-  text-align: center;
+  padding: 20px 0 10px;
 }
 
-header h1 {
+.page-title {
+  text-align: center;
   margin: 0;
   font-size: 2.5rem;
 }
-/* Header Top: H1 and Logout inline */
-.header-top {
+
+/* Header bar with nav + logout */
+.header-bar {
+  max-width: 1000px;
+  margin: 10px auto 0;
+  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 20px;
+  flex-wrap: wrap;
 }
 
-
-.header-top h1 {
-  margin: 0;
-  font-size: 2.5rem;
-}
-
-/* Navigation under the title, centered */
+/* Navigation */
 nav ul {
   list-style: none;
   padding: 0;
-  margin: 10px 0 0;
+  margin: 0;
   display: flex;
-  justify-content: center;
   gap: 15px;
 }
 
@@ -59,9 +54,8 @@ nav ul li a:hover {
   background-color: #289647;
 }
 
-/* Logout button matches homepage */
+/* Logout button aligned right */
 #logout-btn {
-  margin-top: 15px;
   background-color: white;
   color: black;
   padding: 8px 16px;
@@ -76,7 +70,7 @@ nav ul li a:hover {
   background-color: #dff0e0;
 }
 
-/* Sort Bar (not fixed anymore) */
+/* Sort Bar */
 .sort-controls {
   width: 90%;
   max-width: 1000px;
@@ -210,5 +204,14 @@ nav ul li a:hover {
     align-items: flex-start;
     gap: 8px;
   }
-}
 
+  .header-bar {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #logout-btn {
+    margin-top: 10px;
+  }
+}
