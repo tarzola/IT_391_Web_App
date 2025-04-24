@@ -1,79 +1,16 @@
 /* ========== PANTRY PAGE ONLY ========== */
 
-/* Header and Navigation */
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #33AD29;
-  color: white;
-  text-align: center;
-  padding: 20px 0 10px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
-}
-
-header h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
-}
-
-nav {
-  margin-bottom: 10px;
-}
-
-nav ul {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  list-style: none;
-  padding: 0;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-nav ul li a {
-  background-color: #228B22;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: background 0.3s;
-}
-
-nav ul li a:hover {
-  background-color: #006400;
-}
-
-#logout-btn {
-  background-color: white;
-  color: #333;
-  font-weight: bold;
-  padding: 10px 18px;
-  border-radius: 6px;
-  text-decoration: none;
-  border: none;
-  margin-left: 15px;
-  cursor: pointer;
-}
-
-#logout-btn:hover {
-  background-color: #eee;
-}
-
-/* General Layout */
+/* Adjust body spacing to account for global header height */
 body {
-  padding-top: 140px; /* Header (80px) + Sort bar (60px) */
-  background-color: #f4f4f4;
-  font-family: Arial, sans-serif;
+  padding-top: 160px; /* ~100px for header + nav + spacing */
+  background-color: #f9f9f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Sort Controls */
+/* Sort Bar */
 .sort-controls {
   position: fixed;
-  top: 80px;
+  top: 100px; /* below global nav */
   left: 0;
   width: 100%;
   background: #e8f5e9;
@@ -101,7 +38,7 @@ body {
   -moz-appearance: none;
 }
 
-/* Inventory Container */
+/* Layout Containers */
 .section-container {
   width: 90%;
   max-width: 1000px;
@@ -112,13 +49,13 @@ body {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+/* Inventory Cards */
 .inventory-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
 }
 
-/* Inventory Cards */
 .inventory-card {
   background: #ffffff;
   padding: 15px 20px;
@@ -189,7 +126,7 @@ body {
   background-color: #c82333;
 }
 
-/* Responsive Layout */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   .inventory-card {
     width: 100%;
@@ -207,19 +144,5 @@ body {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-  }
-
-  nav ul {
-    flex-direction: column;
-  }
-
-  nav ul li a {
-    display: block;
-    text-align: center;
-    width: 100%;
-  }
-
-  #logout-btn {
-    margin: 10px auto 0;
   }
 }
