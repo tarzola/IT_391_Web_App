@@ -6,7 +6,6 @@
   <title>Saved Recipes</title>
   <link rel="stylesheet" href="global-style.css" />
   <link rel="stylesheet" href="saved-recipes-style.css" />
-  
 </head>
 <body>
   <header>
@@ -50,21 +49,25 @@
         }
 
         recipes.forEach(recipe => {
+          const encodedTitle = encodeURIComponent(`Check out this recipe: ${recipe.recipe_title}`);
+          const encodedUrl = encodeURIComponent(`http://10.111.20.126:3000/recipe-details.html?id=${recipe.recipe_id}`);
+          const twitterLink = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+
           const card = document.createElement('div');
           card.classList.add('recipe-card');
 
           card.innerHTML = `
-  <img src="${recipe.recipe_image}" alt="${recipe.recipe_title}" />
-  <div class="recipe-content">
-    <h2>${recipe.recipe_title}</h2>
-    <span class="badge ${recipe.rating}">${recipe.rating}</span>
-    <div class="actions">
-      <a href="recipe-details.html?id=${recipe.recipe_id}" class="view-link">View Recipe</a>
-      <button onclick="removeRecipe(${recipe.recipe_id})">Remove</button>
-    </div>
-  </div>
-`;
-
+            <img src="${recipe.recipe_image}" alt="${recipe.recipe_title}" />
+            <div class="recipe-content">
+              <h2>${recipe.recipe_title}</h2>
+              <span class="badge ${recipe.rating}">${recipe.rating}</span>
+              <div class="actions">
+                <a href="recipe-details.html?id=${recipe.recipe_id}" class="view-link">View Recipe</a>
+                <button onclick="removeRecipe(${recipe.recipe_id})">Remove</button>
+                <a href="${twitterLink}" class="share-btn" target="_blank">Share</a>
+              </div>
+            </div>
+          `;
 
           container.appendChild(card);
         });
