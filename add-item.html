@@ -23,28 +23,21 @@
   <section>
     <h2>Manual Entry</h2>
     <form id="add-item-form">
-      <!-- Pantry/Fridge Selector at top -->
       <label for="item-type">Type:</label>
       <select id="item-type" required>
         <option value="pantry">Pantry</option>
         <option value="fridge">Fridge</option>
       </select><br /><br />
 
-      <!-- Scan with phone link right after type -->
       <p><strong>
-  Scan and enter a UPC below: 
-  <a class="btn-inline" href="https://qrscanner.org/upc-to-url/?redirect=http://10.111.20.126/add-item.html?upc=" target="_blank">📷 Open Scanner</a>
-</strong></p>
+        Scan and enter a UPC below: 
+        <a class="btn-inline" href="https://qrscanner.org/upc-to-url/?redirect=http://10.111.20.126/add-item.html?upc=" target="_blank">📷 Open Scanner</a>
+      </strong></p>
 
-
-      <!-- UPC input right after scan link -->
       <label for="upc-code">UPC Code (Optional):</label>
       <input type="text" id="upc-code" placeholder="Enter or scan UPC code" /><br />
-
-      <!-- Suggestion preview -->
       <div id="upc-preview" style="margin: 10px 0; font-style: italic; font-size: 0.95rem; color: #333;"></div><br />
 
-      <!-- Remaining inputs -->
       <label for="item-name">Item Name:</label>
       <input type="text" id="item-name" required /><br /><br />
 
@@ -70,15 +63,9 @@
 
       <button type="submit">Add Item</button>
     </form>
-
-    <h2>Barcode Scan (Localhost Only)</h2>
-    <div id="reader" style="width: 300px;"></div>
-    <p><strong>Scanned UPC:</strong> <span id="scanned-code">None</span></p>
   </section>
 
-  <script src="https://unpkg.com/html5-qrcode"></script>
   <script>
-    // Set expiration based on type
     function setExpirationDate() {
       const type = document.getElementById('item-type').value;
       const exp = document.getElementById('item-expiration');
@@ -94,7 +81,7 @@
     document.getElementById('item-type').addEventListener('change', setExpirationDate);
 
     document.addEventListener('DOMContentLoaded', () => {
-      setExpirationDate(); // set default expiration on load
+      setExpirationDate();
 
       const params = new URLSearchParams(window.location.search);
       const upcFromUrl = params.get('upc');
@@ -184,9 +171,8 @@
         if (response.ok) {
           alert('Item added to inventory: ' + data.name);
           document.getElementById('add-item-form').reset();
-          document.getElementById('scanned-code').textContent = 'None';
           document.getElementById('upc-preview').innerHTML = '';
-          setExpirationDate(); // Reset expiration on form reset
+          setExpirationDate();
         } else {
           alert('Error adding item: ' + data.message);
         }
@@ -194,16 +180,7 @@
         alert('Error adding item: ' + error.message);
       }
     });
-
-    function onScanSuccess(decodedText, decodedResult) {
-      document.getElementById('upc-code').value = decodedText;
-      document.getElementById('scanned-code').textContent = decodedText;
-      fetchDetailsFromUPC(decodedText);
-      html5QrcodeScanner.clear();
-    }
-
-    const html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 }, false);
-    html5QrcodeScanner.render(onScanSuccess);
   </script>
 </body>
 </html>
+
