@@ -1,6 +1,5 @@
 /* ===== Homepage Specific Styles ===== */
 
-/* Welcome Section */
 section {
   max-width: 900px;
   margin: 40px auto;
@@ -15,10 +14,10 @@ section h2 {
 
 section p {
   font-size: 16px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
-/* Inventory Summary Box */
+/* Inventory Summary */
 .summary {
   background-color: #ffffff;
   border-radius: 10px;
@@ -29,36 +28,44 @@ section p {
 
 .summary p {
   font-size: 18px;
-  margin: 10px 0;
+  margin: 8px 0;
   color: #2e8b57;
 }
 
-/* Buttons for Quick Actions */
-.quick-actions {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
+.bar-container {
+  background-color: #eee;
+  border-radius: 10px;
+  height: 20px;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 15px;
 }
 
-.btn {
-  padding: 12px 25px;
-  background-color: #32cd32;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  font-size: 16px;
-  transition: background 0.3s;
+#bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #32cd32, #2e8b57);
+  width: 0;
+  transition: width 0.5s ease-in-out;
 }
 
-.btn:hover {
-  background-color: #228b22;
+/* Recipe of the Day */
+#daily-recipe {
+  text-align: center;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 600px) {
-  .quick-actions {
-    flex-direction: column;
-    gap: 15px;
-  }
+#recipe-preview {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 100, 0, 0.1);
+  max-width: 600px;
+  margin: auto;
+}
+
+#recipe-preview h3 {
+  margin-top: 0;
+}
+
+#recipe-preview p {
+  margin: 10px 0 20px;
 }
