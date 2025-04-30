@@ -134,6 +134,25 @@ section {
 .btn-red {
   background-color: #e74c3c;
 }
+/* Filter Dropdown Styling */
+#rating-filter {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+label[for="rating-filter"] {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.filter-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 
 /* Mobile Responsive */
 @media (max-width: 500px) {
