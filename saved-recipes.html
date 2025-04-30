@@ -20,7 +20,8 @@
   </header>
 
   <main>
-    <section style="text-align: center;">
+    <!-- Filter dropdown -->
+    <section style="text-align: center; margin-bottom: 20px;">
       <label for="rating-filter"><strong>Filter by Rating:</strong></label>
       <select id="rating-filter">
         <option value="all">All</option>
@@ -43,29 +44,25 @@
         return;
       }
 
-      const filterValue = document.getElementById('rating-filter')?.value || 'all';
+      const filterValue = document.getElementById('rating-filter').value;
 
       try {
         const response = await fetch('http://10.111.20.126:3000/api/saved-recipes', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` }
         });
 
         const recipes = await response.json();
         const container = document.getElementById('recipes-container');
         container.innerHTML = '';
 
-        const filteredRecipes = filterValue === 'all'
-          ? recipes
-          : recipes.filter(recipe => recipe.rating === filterValue);
+        const filtered = filterValue === 'all' ? recipes : recipes.filter(r => r.rating === filterValue);
 
-        if (!Array.isArray(filteredRecipes) || filteredRecipes.length === 0) {
-          container.innerHTML = '<p>No saved recipes for this rating.</p>';
+        if (!Array.isArray(filtered) || filtered.length === 0) {
+          container.innerHTML = '<p>No saved recipes for this filter.</p>';
           return;
         }
 
-        for (const recipe of filteredRecipes) {
+        for (const recipe of filtered) {
           try {
             const spoonacularResponse = await fetch(`https://api.spoonacular.com/recipes/${recipe.recipe_id}/information?apiKey=51793868eaea480eab4b25e7482cd178`);
             const data = await spoonacularResponse.json();
@@ -81,7 +78,7 @@
               <img src="${recipe.recipe_image}" alt="${recipe.recipe_title}" />
               <div class="recipe-content">
                 <h2>${recipe.recipe_title}</h2>
-                <span class="badge ${recipe.rating}">${recipe.rating}</span>
+                <span class="badge ${recipe.rating}">${recipe.rating.charAt(0).toUpperCase() + recipe.rating.slice(1)}</span>
                 <div class="actions">
                   <a href="recipe-details.html?id=${recipe.recipe_id}" class="view-link">View</a>
                   <button onclick="removeRecipe(${recipe.recipe_id})">Remove</button>
@@ -92,7 +89,7 @@
 
             container.appendChild(card);
           } catch (err) {
-            console.error('Error getting Spoonacular info for sharing:', err);
+            console.error('Error loading recipe detail:', err);
           }
         }
 
@@ -106,28 +103,26 @@
       try {
         const response = await fetch(`http://10.111.20.126:3000/api/saved-recipes/${recipeId}`, {
           method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` }
         });
 
         if (response.ok) {
-          alert('Recipe removed');
-          loadSavedRecipes(); // refresh without reloading page
+          loadSavedRecipes(); // Refresh view
         } else {
           alert('Failed to remove recipe');
         }
-      } catch (error) {
-        console.error('Error removing recipe:', error);
+      } catch (err) {
+        console.error('Error removing recipe:', err);
       }
     }
 
-    // Reload recipes when filter is changed
-    document.getElementById('rating-filter').addEventListener('change', loadSavedRecipes);
-
-    // Initial load
-    loadSavedRecipes();
+    // Reload recipes on filter change
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('rating-filter').addEventListener('change', loadSavedRecipes);
+      loadSavedRecipes();
+    });
   </script>
 </body>
 </html>
+
 
