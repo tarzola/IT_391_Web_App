@@ -235,7 +235,7 @@ app.get('/inventory/suggestions', authenticateJWT, (req, res) => {
 // 📦 UPC Lookup (with more debugging and fallback logic)
 app.get('/upc-lookup/:code', async (req, res) => {
   const upc = req.params.code;
-  const apiKey = '51793868eaea480eab4b25e7482cd178';
+  const apiKey = '13c9e94c4ebf44d7b07e7e73ac5cafaa';
   const url = `https://api.spoonacular.com/food/products/upc/${upc}?apiKey=${apiKey}`;
 
   try {
