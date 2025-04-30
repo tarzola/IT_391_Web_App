@@ -6,7 +6,6 @@
   <title>Recipe Details</title>
   <link rel="stylesheet" href="global-style.css" />
   <link rel="stylesheet" href="recipe-style.css" />
-  
 </head>
 <body>
   <header>
@@ -81,13 +80,11 @@
 
     loadRecipeDetails();
 
-    // Back button logic
     document.getElementById('back-link').addEventListener('click', () => {
       const token = localStorage.getItem('token');
       window.location.href = token ? 'recipes.html' : 'index.html';
     });
 
-    // Handle Save Button
     document.getElementById('save-form').addEventListener('submit', async function(event) {
       event.preventDefault();
       const token = localStorage.getItem('token');
@@ -131,4 +128,5 @@
   </script>
 </body>
 </html>
+
 
