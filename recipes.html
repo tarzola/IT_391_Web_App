@@ -43,7 +43,7 @@
         const inventory = await inventoryResponse.json();
         let ingredients = inventory.map(item => item.name).join(',') || 'tomato,cheese,lettuce';
 
-        const recipeResponse = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=51793868eaea480eab4b25e7482cd178`);
+        const recipeResponse = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=13c9e94c4ebf44d7b07e7e73ac5cafaa`);
         const recipes = await recipeResponse.json();
 
         const container = document.getElementById('recipe-list');
