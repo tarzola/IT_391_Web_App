@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home - Inventory Manager</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What's Cooking? - Home</title>
   <link rel="stylesheet" href="global-style.css" />
-  <link rel="stylesheet" href="homepage-style.css">
+  <link rel="stylesheet" href="homepage-style.css" />
 </head>
 <body>
   <header>
-    <h1>Welcome to Your Pantry</h1>
+    <h1>Welcome to What's Cooking?</h1>
     <nav>
       <ul>
         <li><a href="pantry.html">Pantry</a></li>
@@ -23,17 +23,18 @@
 
   <section>
     <h2>Manage Your Inventory</h2>
-    <p>Welcome back! Use the navigation above to manage your pantry, add new items, or get recipe suggestions based on your inventory.</p>
-
     <div class="summary">
+      <div class="bar-container">
+        <div id="bar-fill"></div>
+      </div>
       <p><strong>Pantry Items:</strong> <span id="pantry-count">0</span></p>
       <p><strong>Fridge Items:</strong> <span id="fridge-count">0</span></p>
     </div>
+  </section>
 
-    <div class="quick-actions">
-      <a href="add-item.html" class="btn">Scan an Item</a>
-      <a href="recipes.html" class="btn">Get Recipes</a>
-    </div>
+  <section id="daily-recipe">
+    <h2>Recipe of the Day</h2>
+    <div id="recipe-preview">Loading...</div>
   </section>
 
   <script>
@@ -42,23 +43,43 @@
 
       try {
         const response = await fetch('http://10.111.20.126:3000/inventory', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+          headers: { 'Authorization': `Bearer ${token}` }
         });
 
         const inventory = await response.json();
+        let pantry = 0, fridge = 0;
 
-        let pantryCount = 0, fridgeCount = 0;
         inventory.forEach(item => {
-          if (item.type === 'pantry') pantryCount++;
-          else if (item.type === 'fridge') fridgeCount++;
+          if (item.type === 'pantry') pantry++;
+          else if (item.type === 'fridge') fridge++;
         });
 
-        document.getElementById('pantry-count').textContent = pantryCount;
-        document.getElementById('fridge-count').textContent = fridgeCount;
+        const total = pantry + fridge || 1;
+        const percent = (pantry / total) * 100;
+
+        document.getElementById('pantry-count').textContent = pantry;
+        document.getElementById('fridge-count').textContent = fridge;
+        document.getElementById('bar-fill').style.width = `${percent}%`;
       } catch (error) {
         console.error('Error fetching inventory:', error);
+      }
+    }
+
+    async function loadDailyRecipe() {
+      try {
+        const response = await fetch(`https://api.spoonacular.com/recipes/random?number=1&apiKey=51793868eaea480eab4b25e7482cd178`);
+        const data = await response.json();
+        const recipe = data.recipes[0];
+
+        const div = document.getElementById('recipe-preview');
+        div.innerHTML = `
+          <h3>${recipe.title}</h3>
+          <img src="${recipe.image}" alt="${recipe.title}" style="max-width: 100%; border-radius: 8px;" />
+          <p>${recipe.summary.replace(/<[^>]*>/g, '').slice(0, 150)}...</p>
+          <a href="recipe-details.html?id=${recipe.id}" class="btn">View Recipe</a>
+        `;
+      } catch (error) {
+        document.getElementById('recipe-preview').innerHTML = '<p>Could not load a recipe today.</p>';
       }
     }
 
@@ -67,8 +88,12 @@
       window.location.href = 'index.html';
     }
 
-    document.addEventListener('DOMContentLoaded', loadInventory);
+    document.addEventListener('DOMContentLoaded', () => {
+      loadInventory();
+      loadDailyRecipe();
+    });
   </script>
 </body>
 </html>
+
 
