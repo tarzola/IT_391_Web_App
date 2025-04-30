@@ -20,6 +20,16 @@
   </header>
 
   <main>
+    <section style="text-align: center;">
+      <label for="rating-filter"><strong>Filter by Rating:</strong></label>
+      <select id="rating-filter">
+        <option value="all">All</option>
+        <option value="green">Green</option>
+        <option value="yellow">Yellow</option>
+        <option value="red">Red</option>
+      </select>
+    </section>
+
     <section id="recipes-container">
       <!-- Saved recipes will appear here -->
     </section>
@@ -27,64 +37,68 @@
 
   <script>
     async function loadSavedRecipes() {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    alert('Please log in to view saved recipes');
-    return;
-  }
-
-  try {
-    const response = await fetch('http://10.111.20.126:3000/api/saved-recipes', {
-      headers: {
-        Authorization: `Bearer ${token}`
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please log in to view saved recipes');
+        return;
       }
-    });
 
-    const recipes = await response.json();
-    const container = document.getElementById('recipes-container');
+      const filterValue = document.getElementById('rating-filter')?.value || 'all';
 
-    if (!Array.isArray(recipes) || recipes.length === 0) {
-      container.innerHTML = '<p>No saved recipes yet.</p>';
-      return;
-    }
-
-    for (const recipe of recipes) {
       try {
-        const spoonacularResponse = await fetch(`https://api.spoonacular.com/recipes/${recipe.recipe_id}/information?apiKey=51793868eaea480eab4b25e7482cd178`);
-        const data = await spoonacularResponse.json();
+        const response = await fetch('http://10.111.20.126:3000/api/saved-recipes', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
 
-        const encodedText = encodeURIComponent(`Check out this recipe: ${recipe.recipe_title} from What's Cooking!`);
-        const encodedUrl = encodeURIComponent(data.spoonacularSourceUrl || `http://10.111.20.126:3000/recipe-details.html?id=${recipe.recipe_id}`);
-        const twitterLink = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+        const recipes = await response.json();
+        const container = document.getElementById('recipes-container');
+        container.innerHTML = '';
 
-        const card = document.createElement('div');
-        card.classList.add('recipe-card');
+        const filteredRecipes = filterValue === 'all'
+          ? recipes
+          : recipes.filter(recipe => recipe.rating === filterValue);
 
-        card.innerHTML = `
-          <img src="${recipe.recipe_image}" alt="${recipe.recipe_title}" />
-          <div class="recipe-content">
-            <h2>${recipe.recipe_title}</h2>
-            <span class="badge ${recipe.rating}">${recipe.rating}</span>
-            <div class="actions">
-              <a href="recipe-details.html?id=${recipe.recipe_id}" class="view-link">View</a>
-              <button onclick="removeRecipe(${recipe.recipe_id})">Remove</button>
-              <a href="${twitterLink}" class="share-btn" target="_blank">Share</a>
-            </div>
-          </div>
-        `;
+        if (!Array.isArray(filteredRecipes) || filteredRecipes.length === 0) {
+          container.innerHTML = '<p>No saved recipes for this rating.</p>';
+          return;
+        }
 
-        container.appendChild(card);
+        for (const recipe of filteredRecipes) {
+          try {
+            const spoonacularResponse = await fetch(`https://api.spoonacular.com/recipes/${recipe.recipe_id}/information?apiKey=51793868eaea480eab4b25e7482cd178`);
+            const data = await spoonacularResponse.json();
+
+            const encodedText = encodeURIComponent(`Check out this recipe: ${recipe.recipe_title} from What's Cooking!`);
+            const encodedUrl = encodeURIComponent(data.spoonacularSourceUrl || `http://10.111.20.126:3000/recipe-details.html?id=${recipe.recipe_id}`);
+            const twitterLink = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+
+            const card = document.createElement('div');
+            card.classList.add('recipe-card');
+
+            card.innerHTML = `
+              <img src="${recipe.recipe_image}" alt="${recipe.recipe_title}" />
+              <div class="recipe-content">
+                <h2>${recipe.recipe_title}</h2>
+                <span class="badge ${recipe.rating}">${recipe.rating}</span>
+                <div class="actions">
+                  <a href="recipe-details.html?id=${recipe.recipe_id}" class="view-link">View</a>
+                  <button onclick="removeRecipe(${recipe.recipe_id})">Remove</button>
+                  <a href="${twitterLink}" class="share-btn" target="_blank">Share</a>
+                </div>
+              </div>
+            `;
+
+            container.appendChild(card);
+          } catch (err) {
+            console.error('Error getting Spoonacular info for sharing:', err);
+          }
+        }
+
       } catch (err) {
-        console.error('Error getting Spoonacular info for sharing:', err);
+        console.error('Error loading saved recipes:', err);
       }
-    }
-
-  } catch (err) {
-    console.error('Error loading saved recipes:', err);
-  }
-}
-
-
     }
 
     async function removeRecipe(recipeId) {
@@ -99,7 +113,7 @@
 
         if (response.ok) {
           alert('Recipe removed');
-          location.reload();
+          loadSavedRecipes(); // refresh without reloading page
         } else {
           alert('Failed to remove recipe');
         }
@@ -108,6 +122,10 @@
       }
     }
 
+    // Reload recipes when filter is changed
+    document.getElementById('rating-filter').addEventListener('change', loadSavedRecipes);
+
+    // Initial load
     loadSavedRecipes();
   </script>
 </body>
