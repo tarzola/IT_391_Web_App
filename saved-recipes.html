@@ -22,15 +22,14 @@
 
   <main>
     <div class="filter-container">
-  <label for="rating-filter">Filter by Rating:</label>
-  <select id="rating-filter">
-    <option value="all">All</option>
-    <option value="green">Green</option>
-    <option value="yellow">Yellow</option>
-    <option value="red">Red</option>
-  </select>
-</div>
-
+      <label for="rating-filter">Filter by Rating:</label>
+      <select id="rating-filter">
+        <option value="all">All</option>
+        <option value="green">Green</option>
+        <option value="yellow">Yellow</option>
+        <option value="red">Red</option>
+      </select>
+    </div>
 
     <section id="recipes-container">
       <!-- Saved recipes will appear here -->
@@ -52,7 +51,27 @@
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        allSavedRecipes = await response.json();
+        const savedRecipes = await response.json();
+        const enrichedRecipes = [];
+
+        for (const recipe of savedRecipes) {
+          try {
+            const apiRes = await fetch(`https://api.spoonacular.com/recipes/${recipe.recipe_id}/information?apiKey=13c9e94c4ebf44d7b07e7e73ac5cafaa`);
+            const data = await apiRes.json();
+
+            enrichedRecipes.push({
+              ...recipe,
+              recipe_title: data.title,
+              recipe_image: data.image,
+              spoonacularUrl: data.spoonacularSourceUrl
+            });
+          } catch (error) {
+            console.warn('Error enriching recipe:', recipe.recipe_id, error);
+            enrichedRecipes.push(recipe); // fallback with what we have
+          }
+        }
+
+        allSavedRecipes = enrichedRecipes;
         renderRecipes(allSavedRecipes);
       } catch (err) {
         console.error('Error loading saved recipes:', err);
@@ -74,9 +93,10 @@
         card.setAttribute('data-rating', recipe.rating);
 
         const viewLink = `recipe-details.html?id=${recipe.recipe_id}`;
+        const twitterShare = recipe.spoonacularUrl || viewLink;
         const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
           `Check out this recipe: ${recipe.recipe_title} from What's Cooking!`
-        )}&url=${encodeURIComponent(viewLink)}`;
+        )}&url=${encodeURIComponent(twitterShare)}`;
 
         card.innerHTML = `
           <img src="${recipe.recipe_image}" alt="${recipe.recipe_title}" />
@@ -131,6 +151,7 @@
   </script>
 </body>
 </html>
+
 
 
 
