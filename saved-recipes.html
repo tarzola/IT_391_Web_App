@@ -93,10 +93,10 @@
         card.setAttribute('data-rating', recipe.rating);
 
         const viewLink = `recipe-details.html?id=${recipe.recipe_id}`;
-        const twitterShare = recipe.spoonacularUrl || viewLink;
+        const spoonacularUrl = recipe.spoonacularUrl || `https://spoonacular.com/recipes/${encodeURIComponent(recipe.recipe_title || 'recipe')}-${recipe.recipe_id}`;
         const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
-          `Check out this recipe: ${recipe.recipe_title} from What's Cooking!`
-        )}&url=${encodeURIComponent(twitterShare)}`;
+          `Check out this recipe: ${recipe.recipe_title || 'a recipe'} from What's Cooking!`
+        )}&url=${encodeURIComponent(spoonacularUrl)}`;
 
         card.innerHTML = `
           <img src="${recipe.recipe_image}" alt="${recipe.recipe_title}" />
@@ -151,7 +151,3 @@
   </script>
 </body>
 </html>
-
-
-
-
